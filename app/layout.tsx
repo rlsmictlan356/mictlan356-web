@@ -4,7 +4,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "RLS Mictlán No. 356",
-  description: "Sitio oficial de la Respetable Logia Simbólica Mictlán No. 356."
+  description:
+    "Sitio oficial de la Respetable Logia Simbólica Mictlán No. 356."
 };
 
 export default function RootLayout({
