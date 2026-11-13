@@ -39,6 +39,7 @@ jobs:
           test -f out/asistencia/index.html
           test -f out/images/mictlan-356-emblema.webp
           test -f out/images/duat-no7-emblema.svg
+          test -f out/images/escuadra-compas-imperial.svg
 
       - name: Deploy to isolated Firebase preview channel
         id: firebase_preview
