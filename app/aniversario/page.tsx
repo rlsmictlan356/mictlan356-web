@@ -158,6 +158,10 @@ export default function AniversarioPage() {
           <small>Fraternidad, trabajo y perseverancia.</small>
         </footer>
       </div>
+      <div className="ann-mobile-cta" aria-label="Acceso rápido a la confirmación">
+        <span>28 NOV · 13:00 H</span>
+        <a href="#registro">Confirmar asistencia ↗</a>
+      </div>
     </main>
   );
 }
