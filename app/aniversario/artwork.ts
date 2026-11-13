@@ -1,7 +1,6 @@
 /**
- * Imagen conmemorativa derecha.
- * Pendiente de recibir el archivo PNG/JPG original.
- * No habilitarla con un enlace de ChatGPT Share: debe ser un recurso local público
- * optimizado como WebP en /public/images/aniversario-hero-right.webp.
+ * Arte conmemorativo original proporcionado para el aniversario de Mictlán.
+ * Archivo PNG transparente, 1122 × 1402 px, sin alteraciones en el diseño.
+ * Se usa exclusivamente como elemento decorativo en el hero derecho.
  */
-export const anniversaryArtworkSrc = "";
+export const anniversaryArtworkSrc = "/images/aniversario-guardian-xolo.png";
