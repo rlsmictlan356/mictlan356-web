@@ -25,7 +25,11 @@ function setup_() {
   return "Preparación completada. Acceso a Sheets y carpeta de comprobantes autorizado.";
 }
 
-function doGet() {
+function doGet(e) {
+  // Consulta de recepción: no devuelve datos personales, solo estado por UUID.
+  if (e && e.parameter && e.parameter.status === "1") {
+    return registrationStatusResponse_(e.parameter);
+  }
   return HtmlService.createHtmlOutputFromFile("Form")
     .setTitle("Registro · V Aniversario de Mictlán")
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
@@ -69,28 +73,52 @@ function submitRegistration(payload) {
     const organizersSheet = SpreadsheetApp.openById(ORGANIZERS_SPREADSHEET_ID).getSheetByName(ORGANIZERS_SHEET_NAME);
     if (!privateSheet || !organizersSheet) throw new Error("Las hojas de registro no están configuradas.");
 
-    // Evita registros duplicados si el navegador reintenta tras una respuesta lenta.
-    const existing = privateSheet.getRange("A2:A").createTextFinder(id).matchEntireCell(true).findNext();
-    if (existing) return { ok: true, id, alreadyRegistered: true };
+    // Recuperación idempotente: cada destino se verifica por separado.
+    // Si Drive recibió el archivo pero una hoja falló, el siguiente intento
+    // CON EL MISMO UUID solo completa lo que falte; no duplica comprobantes.
+    const existingPrivate = privateSheet.getRange("A2:A").createTextFinder(id).matchEntireCell(true).findNext();
+    const existingOrganizers = organizersSheet.getRange("A2:A").createTextFinder(id).matchEntireCell(true).findNext();
+    if (existingPrivate && existingOrganizers) return { ok: true, id, alreadyRegistered: true };
 
     const folder = getReceiptsFolder_();
     const ext = mime === "application/pdf" ? ".pdf" : mime === "image/png" ? ".png" : ".jpg";
     const safeName = filename.replace(/[^A-Za-z0-9_.-]/g, "_").slice(0,70);
-    const blob = Utilities.newBlob(bytes, mime, id + "_" + safeName.replace(/\.(pdf|png|jpe?g)$/i, "") + ext);
-    const driveFile = folder.createFile(blob);
-    driveFile.setDescription("V Aniversario Mictlán · Registro: " + id + " · Hermano: " + name);
+    const outputName = id + "_" + safeName.replace(/\.(pdf|png|jpe?g)$/i, "") + ext;
+
+    // Reutiliza un comprobante que pudiera haberse creado antes de un fallo.
+    let driveFile = null;
+    const files = folder.getFiles();
+    while (files.hasNext()) {
+      const candidate = files.next();
+      if (candidate.getName().indexOf(id + "_") === 0) {
+        driveFile = candidate;
+        break;
+      }
+    }
+    if (!driveFile) {
+      const blob = Utilities.newBlob(bytes, mime, outputName);
+      driveFile = folder.createFile(blob);
+      driveFile.setDescription("V Aniversario Mictlán · Registro: " + id + " · Hermano: " + name);
+    }
 
     const timestamp = new Date();
-    // Cabeceras creadas en Google Sheets: 13 campos privados y 8 de organizadores.
-    privateSheet.appendRow([
-      id, timestamp, sheetSafe_(name), attendance, guests, total, sheetSafe_(meat),
-      sheetSafe_(utensils), 300, driveFile.getUrl(), "Pendiente", "", ""
-    ]);
-    organizersSheet.appendRow([
-      id, timestamp, sheetSafe_(name), attendance, guests, total, sheetSafe_(meat), sheetSafe_(utensils)
-    ]);
+    // Cabeceras: 13 campos privados y 8 de organizadores. No cambiar orden.
+    if (!existingPrivate) {
+      privateSheet.appendRow([
+        id, timestamp, sheetSafe_(name), attendance, guests, total, sheetSafe_(meat),
+        sheetSafe_(utensils), 300, driveFile.getUrl(), "Pendiente", "", ""
+      ]);
+      SpreadsheetApp.flush();
+    }
+    if (!existingOrganizers) {
+      organizersSheet.appendRow([
+        id, timestamp, sheetSafe_(name), attendance, guests, total,
+        sheetSafe_(meat), sheetSafe_(utensils)
+      ]);
+      SpreadsheetApp.flush();
+    }
 
-    return { ok: true, id, alreadyRegistered: false };
+    return { ok: true, id, alreadyRegistered: Boolean(existingPrivate || existingOrganizers) };
   } finally {
     lock.releaseLock();
   }
