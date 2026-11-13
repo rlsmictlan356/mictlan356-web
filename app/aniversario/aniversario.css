@@ -486,3 +486,37 @@
   .ann-mobile-cta a{font-size:11px;padding:10px 12px}
 }
 @media(max-width:350px){.ann-mobile-cta span{font-size:9px}.ann-mobile-cta a{font-size:10px;padding:10px 9px}}
+
+/* Registro integrado: formulario oficial a ancho completo, sin redirección. */
+.ann-form-embedded{
+  width:100%;
+  max-width:800px;
+  padding:clamp(10px,2vw,20px);
+  border-color:rgba(221,151,88,.54);
+  background:radial-gradient(ellipse at 50% 0,rgba(117,33,25,.18),transparent 68%),#19120f;
+}
+.ann-form-embedded iframe{
+  display:block;
+  width:100%;
+  height:1010px;
+  min-height:1010px;
+  border:0;
+  background:#151410;
+}
+.ann-embedded-note{
+  margin:14px 3px 0;
+  color:#c5ab92;
+  font-size:12px;
+  line-height:1.6;
+  text-align:center;
+}
+@media(max-width:780px){
+  .ann-form-embedded{padding:10px}
+  .ann-form-embedded iframe{height:1120px;min-height:1120px}
+  .ann-registration{padding-bottom:70px}
+  .ann-footer{padding-bottom:75px}
+}
+@media(max-width:480px){
+  .ann-form-embedded{padding:6px}
+  .ann-form-embedded iframe{height:1200px;min-height:1200px}
+}
