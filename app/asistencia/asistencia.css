@@ -1,213 +1,235 @@
-/* Blanco Imperial · attendance: preserves the original embedded Google Form */
-.asistencia-page {
-  --paper: #f9f7f1;
-  --ink: #4f4334;
-  --gold: #af8b55;
-  --accent: #755938;
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap");
+
+.wc-site {
+  --wc-gold: #b29466;
+  --wc-brown: #655039;
+  --wc-ivory: #fbf9f3;
+  --wc-ink: #443a31;
+  --wc-rule: #d6c4a6;
   position: relative;
   isolation: isolate;
   min-height: 100vh;
-  padding: 0 clamp(16px, 4vw, 64px);
   overflow: hidden;
-  background:
-    radial-gradient(ellipse at 50% 4%, rgba(255,255,255,.98), transparent 65%),
-    linear-gradient(160deg, #fffdf9, #f5efe5);
-  color: var(--ink);
+  background: #f8f5ee;
+  padding: 12px 10px 18px;
+  color: var(--wc-ink);
+  color-scheme: light;
   font-family: "Cormorant Garamond", Georgia, serif;
+  text-align: center;
 }
-.asistencia-page::before {
-  position: absolute;
-  content: "";
-  z-index: -1;
-  inset: 0;
-  pointer-events: none;
-  opacity: .16;
-  background-image: repeating-linear-gradient(0deg, transparent 0 4px, rgba(123,98,55,.05) 4px 5px);
-}
-.asistencia-halo {
-  position: absolute;
-  z-index: -1;
-  left: 50%;
-  top: 68px;
-  width: min(95vw, 850px);
-  height: 600px;
-  border: 1px solid rgba(176, 137, 77, .12);
-  border-bottom: 0;
-  border-radius: 50% 50% 0 0;
-  transform: translateX(-50%);
-  pointer-events: none;
-}
-.asistencia-halo::before, .asistencia-halo::after {
-  position: absolute; content: ""; inset: 16px;
-  border: 1px solid rgba(176,137,77,.07);
-  border-bottom: 0;
-  border-radius: inherit;
-}
-.asistencia-halo::after { inset: 30px; }
-.asistencia-border {
-  position: absolute;
-  inset: 9px;
-  border: 1px solid rgba(175,139,85,.38);
-  pointer-events: none;
-}
-.asistencia-header {
-  max-width: 1150px;
+.wc-site * { box-sizing: border-box; }
+.wc-outline { position: absolute; inset: 6px; border: 1px solid #d9c6a5; pointer-events: none; }
+.wc-paper {
+  position: relative;
+  max-width: 860px;
   margin: 0 auto;
+  padding: 8px 8px 32px;
+  background: radial-gradient(ellipse at 50% 12%, #fffefa, transparent 70%);
+}
+.wc-arch {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(100%, 620px);
+  height: 320px;
+  border: 1px solid rgba(180,153,116,.26);
+  border-bottom: none;
+  border-radius: 360px 360px 0 0;
+  box-shadow: inset 0 0 0 11px rgba(255,255,255,.33), inset 0 0 0 12px rgba(196,169,131,.17);
+  pointer-events: none;
+}
+.wc-flower {
+  position: absolute;
+  width: 130px;
+  height: auto;
+  top: 195px;
+  opacity: .27;
+  pointer-events: none;
+}
+.wc-flower-left { left: -84px; }
+.wc-flower-right { right: -84px; transform: scaleX(-1); }
+.wc-invite, .wc-logistics, .wc-registration, .wc-footer { position: relative; z-index: 1; }
+.wc-emblems {
+  display: grid;
+  grid-template-columns: 1fr 1.22fr 1fr;
+  align-items: start;
+  gap: 6px;
+  width: min(100%, 430px);
+  margin: 0 auto 5px;
+}
+.wc-emblem {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  justify-content: start;
+  align-items: center;
+}
+.wc-emblem-seal img {
+  width: clamp(72px, 21vw, 104px);
+  height: clamp(72px, 21vw, 104px);
+  object-fit: contain;
+  border-radius: 50%;
+  border: 1px solid #d2b98e;
+  padding: 3px;
+  box-shadow: 0 0 0 4px rgba(219,194,156,.12);
+  background: rgba(255,255,255,.52);
+}
+.wc-emblem-seal span {
+  font: 500 11px/1.4 Inter,Arial,sans-serif;
+  letter-spacing: .005em;
+  color: #7b6142;
+  white-space: nowrap;
+}
+.wc-compasses { align-self: start; margin-top: -2px; }
+.wc-compasses img {
+  display: block;
+  width: clamp(100px, 29vw, 152px);
+  height: clamp(100px, 29vw, 152px);
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(116,79,33,.12));
+}
+.wc-eyebrow {
+  color: #907047;
+  font: 600 11px/1.5 Inter,Arial,sans-serif;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin: 6px 0 8px;
+}
+.wc-site h1 {
+  color: #6b5335;
+  font: 500 clamp(39px, 10.1vw, 67px)/.94 "Cormorant Garamond",Georgia,serif;
+  letter-spacing: -.027em;
+  margin: 0;
+  text-wrap: balance;
+}
+.wc-site h1 em { color: #967243; font-style: normal; }
+.wc-motto {
+  max-width: 530px;
+  margin: 10px auto 0;
+  font: italic 400 clamp(18px, 3.3vw, 23px)/1.18 "Cormorant Garamond",Georgia,serif;
+  color: #71604d;
+  text-wrap: balance;
+}
+.wc-flourish {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 28px 4px 16px;
-  gap: 12px;
-  border-bottom: 1px solid rgba(175,139,85,.35);
+  gap: 9px;
+  max-width: 210px;
+  margin: 8px auto 6px;
+  color: #b29466;
 }
-.asistencia-home-link, .asistencia-header-right {
-  font: 600 11px/1.4 Inter, Arial, Helvetica, sans-serif;
-  text-transform: uppercase;
-  letter-spacing: .12em;
-  color: #8f734c;
+.wc-flourish span { height: 1px; flex: 1; background: linear-gradient(90deg, transparent,#c7a978); }
+.wc-flourish span:last-child { transform: rotate(180deg); }
+.wc-honorees {
+  margin: 0 auto;
+  max-width: 640px;
+  color: #504135;
+  font: 500 clamp(21px, 5.7vw, 31px)/1.08 "Cormorant Garamond",Georgia,serif;
+}
+.wc-honorees span { display: block; }
+.wc-honorees b { display: block; color: #a88757; font: italic 400 21px/1.1 "Cormorant Garamond",Georgia,serif; margin: 2px 0; }
+.wc-logistics {
+  border-top: 1px solid rgba(170,131,76,.36);
+  border-bottom: 1px solid rgba(170,131,76,.3);
+  max-width: 650px;
+  margin: 18px auto 0;
+  padding: 13px 3px 14px;
+}
+.wc-date, .wc-location { display: flex; flex-direction: column; margin: 0 auto; }
+.wc-date { color: #6d583e; font: 500 21px/1.2 "Cormorant Garamond",Georgia,serif; }
+.wc-date strong,.wc-location strong { font-weight: 600; }
+.wc-date span { color: #936a39; }
+.wc-location { margin-top: 8px; font: 500 18px/1.22 "Cormorant Garamond",Georgia,serif; color: #5d4f40; }
+.wc-location span { margin: 5px auto 0; max-width: 510px; font: 400 13px/1.43 Inter,Arial,sans-serif; }
+.wc-map {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px auto 0;
+  color: #744f22;
+  background: #fffaf1;
+  border: 1px solid #cdb186;
+  border-radius: 6px;
+  padding: 9px 12px;
+  min-height: 44px;
+  font: 600 13px/1.3 Inter,Arial,sans-serif;
   text-decoration: none;
 }
-.asistencia-home-link:hover, .asistencia-home-link:focus-visible { color: #594122; }
-.asistencia-arrow { font-size: 18px; margin-right: 8px; }
-.asistencia-intro {
-  width: min(100%, 730px);
-  margin: 36px auto 0;
-  text-align: center;
-}
-.asistencia-seal { width: clamp(110px, 18vw, 172px); margin: 0 auto 15px; }
-.asistencia-seal img { display: block; width: 100%; height: auto; filter: drop-shadow(0 5px 13px rgba(101,75,43,.12)); }
-.asistencia-eyebrow {
-  margin: 12px auto 0; color: #8c714e;
-  font: 600 11px/1.5 Inter, Arial, sans-serif;
-  text-transform: uppercase;
-  letter-spacing: .18em;
-}
-.asistencia-ornament {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  margin: 18px auto;
-  color: #ab8b60;
-}
-.asistencia-ornament > span:not(.asistencia-diamond) {
-  width: 72px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #aa8a58);
-}
-.asistencia-ornament > span:last-child { transform: rotate(180deg); }
-.asistencia-diamond { font-size: 11px; }
-.asistencia-page h1 {
-  margin: 0 auto 18px;
-  color: #775c36;
-  font: 500 clamp(44px, 8vw, 78px)/.98 "Cormorant Garamond", Georgia, serif;
-  letter-spacing: -.03em;
-}
-.asistencia-page h1 em { font-style: normal; color: #97764a; }
-.asistencia-lead {
-  max-width: 550px;
-  margin: 0 auto;
-  font: 400 clamp(19px, 2.8vw, 25px)/1.4 "Cormorant Garamond", Georgia, serif;
-  color: #6b5e4d;
-}
-.asistencia-notice {
-  max-width: 570px;
-  margin: 26px auto 0;
-  padding: 19px 24px;
-  border: 1px solid #d1b993;
-  background: rgba(255,255,255,.54);
-}
-.asistencia-notice-label {
-  display: block;
-  font: 600 10px/1.4 Inter, Arial, sans-serif;
-  letter-spacing: .13em;
-  text-transform: uppercase;
-  color: #916b3d;
-}
-.asistencia-notice p {
-  max-width: 430px;
-  margin: 9px auto 0;
-  font: italic 20px/1.28 "Cormorant Garamond", Georgia, serif;
-  color: #4d4438;
-}
-.asistencia-form-section {
-  width: min(100%, 820px);
-  margin: 50px auto 0;
-  text-align: center;
-}
-.asistencia-form-heading {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.asistencia-form-rule {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(164,123,69,.43));
-}
-.asistencia-form-rule:last-child { transform: rotate(180deg); }
-.asistencia-page h2 {
+.wc-map:hover,.wc-map:focus-visible { color: #4d3215; background: #f6ecd8; }
+.wc-map svg { flex: none; width: 19px; height: 19px; stroke: currentColor; stroke-width: 1.5; }
+.wc-registration { max-width: 710px; margin: 17px auto 0; }
+.wc-site h2 {
   margin: 0;
-  color: #795f3f;
-  font: 500 clamp(27px, 4vw, 38px)/1.15 "Cormorant Garamond", Georgia, serif;
+  color: #765b36;
+  font: 500 clamp(29px, 7vw, 42px)/1.12 "Cormorant Garamond",Georgia,serif;
 }
-.asistencia-form-helper {
-  max-width: 540px;
-  margin: 15px auto 22px;
-  color: #7c7062;
-  font: 400 13px/1.65 Inter, Arial, sans-serif;
+.wc-help {
+  margin: 6px auto 12px;
+  font: 400 15px/1.45 Inter,Arial,sans-serif;
+  color: #655848;
 }
-.asistencia-form-shell {
+.wc-note {
+  margin: 0 auto 12px;
+  max-width: 625px;
+  padding: 11px 13px;
+  border: 1px solid #d8c19f;
+  border-radius: 7px;
+  background: #f1e7d6;
+  color: #5f4b36;
+  font: 400 14px/1.5 Inter,Arial,sans-serif;
+}
+.wc-note strong { font-weight: 600; }
+.wc-form-container {
   overflow: hidden;
-  border: 1px solid #cbb38f;
+  border: 1px solid #d5c3aa;
   border-radius: 10px;
+  box-shadow: 0 10px 32px rgba(109,81,43,.06);
   background: #fff;
-  box-shadow: 0 14px 40px rgba(99,73,46,.12);
 }
-.asistencia-form-shell iframe {
+.wc-form-container iframe {
   display: block;
-  width: 100%;
-  height: 1100px;
   border: 0;
+  width: 100%;
+  height: 1320px;
   background: #fff;
 }
-.asistencia-external-link {
-  display: inline-flex;
-  gap: 9px;
-  align-items: center;
-  margin: 22px auto 0;
-  color: #947043;
-  font: 600 12px/1.5 Inter, Arial, sans-serif;
-  text-underline-offset: 5px;
+.wc-direct {
+  display: inline-block;
+  padding: 10px 5px;
+  margin-top: 3px;
+  color: #855e30;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font: 500 13px/1.45 Inter,Arial,sans-serif;
 }
-.asistencia-external-link:hover { color: #593c20; }
-.asistencia-footer {
-  padding: 62px 0 45px;
-  text-align: center;
-  color: #95764c;
+.wc-footer { padding-top: 21px; color: #997749; }
+.wc-footer span { font-size: 26px; }
+.wc-footer p { margin: 1px 0; font: 500 11px/1.4 Inter,Arial,sans-serif; }
+@media (min-width: 680px) {
+  .wc-site { padding: 16px 18px 25px; }
+  .wc-outline { inset: 11px; }
+  .wc-paper { padding: 17px 35px 33px; }
+  .wc-emblems { max-width: 500px; gap: 25px; margin-bottom: 14px; }
+  .wc-emblem-seal img { width: 116px; height: 116px; }
+  .wc-compasses img { width: 162px; height: 162px; }
+  .wc-emblem-seal span { font-size: 12px; }
+  .wc-eyebrow { margin-top: 5px; }
+  .wc-motto { margin-top: 13px; }
+  .wc-flower { width: 205px; top: 260px; opacity: .48; }
+  .wc-flower-left { left: -190px; }
+  .wc-flower-right { right: -190px; }
+  .wc-arch { height: 460px; width: 750px; top: -75px; }
+  .wc-logistics { margin-top: 23px; }
+  .wc-date { font-size: 23px; }
+  .wc-location { font-size: 21px; }
+  .wc-registration { margin-top: 24px; }
+  .wc-form-container iframe { height: 1120px; }
 }
-.asistencia-footer-mark { font-size: 26px; }
-.asistencia-footer p {
-  margin: 8px 0 5px;
-  font: 600 11px/1.4 Inter, Arial, sans-serif;
-  text-transform: uppercase;
-  letter-spacing: .1em;
-}
-.asistencia-footer small {
-  font: italic 17px/1.3 "Cormorant Garamond", Georgia, serif;
-  color: #88765e;
-}
-@media (max-width: 650px) {
-  .asistencia-page { padding: 0 16px; }
-  .asistencia-border { inset: 8px; }
-  .asistencia-header { padding: 22px 2px 14px; }
-  .asistencia-header-right { font-size: 10px; }
-  .asistencia-intro { margin-top: 20px; }
-  .asistencia-page h1 { font-size: clamp(42px,11vw,65px); }
-  .asistencia-eyebrow { font-size: 10px; letter-spacing: .1em; }
-  .asistencia-notice { padding: 16px 14px; }
-  .asistencia-form-section { margin-top: 41px; }
-  .asistencia-form-heading { gap: 8px; }
-  .asistencia-form-shell iframe { height: 1300px; }
-  .asistencia-footer { padding: 50px 0 35px; }
+@media (max-width: 380px) {
+  .wc-emblem-seal img { width: 70px; height: 70px; }
+  .wc-emblem-seal span { font-size: 10px; }
+  .wc-compasses img { width: 95px; height: 95px; }
+  .wc-site h1 { font-size: clamp(37px,10vw,43px); }
 }
