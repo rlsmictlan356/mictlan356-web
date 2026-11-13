@@ -60,10 +60,6 @@ export default function AniversarioPage() {
             <p className="ann-loge-name">R∴L∴S∴ Mictlán No. 356</p>
             <Flourish />
             <p className="ann-motto">Cinco años de trabajo, fraternidad y perseverancia</p>
-            <div className="ann-hero-cta">
-              <a className="ann-button ann-button-primary" href="#registro">Confirmar participación</a>
-              <a className="ann-button ann-button-outline" href={googleCalendar.toString()} target="_blank" rel="noopener noreferrer">Añadir al calendario</a>
-            </div>
             <p className="ann-hero-venue">28 de noviembre · 13:00 h · Rooftop del V∴H∴ Ragnar</p>
           </div>
           {anniversaryArtworkSrc && (

@@ -300,3 +300,71 @@
   .ann-gateway-link {transition:none}
   .ann-gateway-link:hover {transform:none}
 }
+
+
+/* Registration form: native, readable, and entirely within /aniversario.
+   Google Apps Script is a backend only; no visible third-party iframe. */
+.ann-native-shell { max-width:700px; padding:clamp(21px,4vw,38px); }
+.ann-native-form { display:grid; gap:10px; width:100%; color:#eee0c7; }
+.ann-native-overline {
+  margin:0 0 3px; font:600 10px/1.4 "Inter",Arial,sans-serif;
+  text-transform:uppercase; letter-spacing:.18em; color:#c0a16e;
+}
+.ann-native-form>h3 {
+  margin:0 0 18px; font:500 clamp(29px,4vw,38px)/1.12 "Cormorant Garamond",Georgia,serif;
+  color:#f1e1c6;
+}
+.ann-native-form label, .ann-native-conditional label {
+  display:block; margin-top:14px; font:600 14px/1.5 "Inter",Arial,sans-serif; color:#ede1ce;
+}
+.ann-native-form label span, .ann-native-conditional label span {color:#deb97f}
+.ann-native-form label small {color:#b3a594;font-weight:400}
+.ann-native-form input:not([type="hidden"]), .ann-native-form select,.ann-native-form textarea {
+  box-sizing:border-box;display:block;width:100%;min-height:50px;margin:0;
+  border:1px solid #826c4d;border-radius:3px;padding:12px 13px;
+  background:#242119;color:#f7efdf;
+  font:400 15px/1.4 "Inter",Arial,sans-serif;
+}
+.ann-native-form input::placeholder,.ann-native-form textarea::placeholder {color:#afa28d}
+.ann-native-form input:focus-visible,.ann-native-form select:focus-visible,
+.ann-native-form textarea:focus-visible,.ann-native-submit:focus-visible {
+  outline:2px solid #edc98b;outline-offset:2px;
+}
+.ann-native-form input[type="file"] {padding:12px;cursor:pointer}
+.ann-native-form input[type="file"]::file-selector-button {
+  border:1px solid #af9365;background:#33291b;color:#f1dfbd;
+  border-radius:2px;padding:8px 12px;margin-right:12px;font:600 12px/1.5 "Inter",Arial,sans-serif;cursor:pointer;
+}
+.ann-native-form textarea {resize:vertical;min-height:88px}
+.ann-native-conditional {display:grid;gap:10px;padding:6px 0 0;}
+.ann-native-counter {color:#c8b597;font-size:13px;margin:0}
+.ann-native-counter strong {color:#f5dfb4}
+.ann-native-fee {margin:19px 0 3px;padding:19px 21px;border:1px solid #786341;background:rgba(185,150,93,.085)}
+.ann-native-fee strong {display:block;color:#f4d69e;margin-bottom:5px;font-size:14px}
+.ann-native-fee p {font-size:12px;line-height:1.65;margin:5px 0;color:#d6c8b1}
+.ann-native-hint {font-size:12px;line-height:1.6;color:#bcad99;margin:0}
+.ann-native-submit {background:#d6b77d;color:#15120c;font-weight:700;font-size:14px;letter-spacing:.04em;
+  border:1px solid #ebd19f;min-height:56px;cursor:pointer;margin-top:18px;padding:13px 15px}
+.ann-native-submit:hover:not(:disabled) {background:#e8cd98}
+.ann-native-submit:disabled {opacity:.68;cursor:progress}
+.ann-native-error {margin:16px 0 0;border:1px solid #c2786c;padding:13px 15px;background:#391f1b;color:#ffdbd2;
+  font-size:13px;line-height:1.65}
+.ann-native-note {text-align:center;margin:0}
+.ann-native-success {padding:32px 7px;text-align:center}
+.ann-native-success-mark {font-size:30px;color:#0e1a10;background:#b3d0a0;display:grid;place-items:center;margin:0 auto 18px;
+  width:64px;height:64px;border-radius:50%}
+.ann-native-success h3 {font:500 40px/1.1 "Cormorant Garamond",Georgia,serif;color:#f4dfb4;margin:0 0 15px}
+.ann-native-success p {color:#e0d1bb;font-size:14px;line-height:1.7}
+.ann-native-folio {font-size:12px!important;overflow-wrap:anywhere;border:1px solid #866c48;padding:12px;color:#ead4a7!important}
+/* Keep the transport frame technically rendered so mobile browsers perform the POST. */
+iframe.ann-native-transport {
+  position:absolute!important;left:-9999px!important;top:-9999px!important;
+  width:1px!important;height:1px!important;border:0!important;
+  opacity:0!important;pointer-events:none!important;
+}
+form.ann-native-transport {display:none!important}
+@media(max-width:480px){
+  .ann-native-shell {padding:20px 16px}
+  .ann-native-form input:not([type="hidden"]),.ann-native-form select,.ann-native-form textarea {font-size:16px}
+  .ann-native-form label,.ann-native-conditional label {font-size:13px}
+}
