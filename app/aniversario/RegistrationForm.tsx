@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 
 const MAX_RECEIPT_BYTES = 4 * 1024 * 1024;
 const MAX_SOURCE_IMAGE_BYTES = 20 * 1024 * 1024;
+const TARGET_IMAGE_BYTES = Math.floor(1.5 * 1024 * 1024);
 const RESPONSE_KIND = "mictlan-anniversary-2026-result";
 const POST_FRAME = "mictlan-anniversary-post-frame";
 type State = "idle" | "sending" | "success" | "error";
@@ -66,7 +67,7 @@ async function prepareReceipt(source: File): Promise<{file: File; mime: string}>
   if (source.size < 1 || source.size > MAX_SOURCE_IMAGE_BYTES) {
     throw new Error("La fotografía pesa más de 20 MB. Usa una versión de menor tamaño.");
   }
-  if ((mime === "image/jpeg" || mime === "image/png") && source.size <= MAX_RECEIPT_BYTES) {
+  if ((mime === "image/jpeg" || mime === "image/png") && source.size <= TARGET_IMAGE_BYTES) {
     return {file: source, mime};
   }
 
@@ -102,7 +103,7 @@ async function prepareReceipt(source: File): Promise<{file: File; mime: string}>
       const compressed = await new Promise<Blob | null>((resolve) =>
         canvas.toBlob(resolve, "image/jpeg", quality)
       );
-      if (compressed && compressed.size <= MAX_RECEIPT_BYTES) {
+      if (compressed && compressed.size <= TARGET_IMAGE_BYTES) {
         const cleanName = source.name.replace(/\.[^.]+$/, "").replace(/[^A-Za-z0-9_-]/g, "_").slice(0, 55) || "comprobante";
         return {
           file: new File([compressed], cleanName + ".jpg", {type: "image/jpeg"}),
