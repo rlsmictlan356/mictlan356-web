@@ -3,10 +3,20 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 
 const MAX_RECEIPT_BYTES = 4 * 1024 * 1024;
+const MAX_SOURCE_IMAGE_BYTES = 20 * 1024 * 1024;
 const RESPONSE_KIND = "mictlan-anniversary-2026-result";
 const POST_FRAME = "mictlan-anniversary-post-frame";
 type State = "idle" | "sending" | "success" | "error";
 type Reply = { kind: string; ok: boolean; id: string; alreadyRegistered?: boolean; message?: string };
+type StatusReply = {
+  kind: "mictlan-anniversary-2026-status";
+  id: string;
+  privateSaved: boolean;
+  organizersSaved: boolean;
+  receiptSaved?: boolean;
+  error: boolean;
+};
+type StatusWindow = Window & { MictlanRegistryCallback?: (result: StatusReply) => void };
 
 function createId() {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") return crypto.randomUUID();
@@ -25,6 +35,83 @@ function fileToBase64(file: File): Promise<string> {
     reader.onerror = () => reject(new Error("No se pudo leer el comprobante."));
     reader.readAsDataURL(file);
   });
+}
+
+
+/**
+ * Preserve small JPG/PNG files unchanged. Convert large images and supported
+ * HEIC/HEIF/WEBP receipts into a readable JPG under the Apps Script 4 MB limit.
+ * PDF is not rasterized: PDF > 4 MB must be reduced by the sender.
+ */
+async function prepareReceipt(source: File): Promise<{file: File; mime: string}> {
+  const ext = source.name.toLowerCase().split(".").pop() || "";
+  const mime = source.type ||
+    (ext === "pdf" ? "application/pdf" :
+    ext === "png" ? "image/png" :
+    ext === "jpg" || ext === "jpeg" ? "image/jpeg" :
+    ext === "webp" ? "image/webp" :
+    ext === "heic" ? "image/heic" :
+    ext === "heif" ? "image/heif" : "");
+
+  if (mime === "application/pdf") {
+    if (source.size < 1 || source.size > MAX_RECEIPT_BYTES) {
+      throw new Error("El PDF debe pesar 4 MB o menos. Comprímelo antes de adjuntarlo.");
+    }
+    return {file: source, mime};
+  }
+
+  if (!["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"].includes(mime)) {
+    throw new Error("Adjunta un comprobante JPG, PNG, HEIC, WEBP o PDF.");
+  }
+  if (source.size < 1 || source.size > MAX_SOURCE_IMAGE_BYTES) {
+    throw new Error("La fotografía pesa más de 20 MB. Usa una versión de menor tamaño.");
+  }
+  if ((mime === "image/jpeg" || mime === "image/png") && source.size <= MAX_RECEIPT_BYTES) {
+    return {file: source, mime};
+  }
+
+  const url = URL.createObjectURL(source);
+  let image: HTMLImageElement;
+  try {
+    image = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error("No se pudo convertir esta imagen. Guárdala como JPG o PNG e inténtalo de nuevo."));
+      img.src = url;
+    });
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+
+  const baseWidth = image.naturalWidth || image.width;
+  const baseHeight = image.naturalHeight || image.height;
+  if (!baseWidth || !baseHeight) throw new Error("La imagen no tiene dimensiones válidas.");
+
+  for (const maxSide of [2200, 1800, 1500, 1200]) {
+    const ratio = Math.min(1, maxSide / Math.max(baseWidth, baseHeight));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(baseWidth * ratio));
+    canvas.height = Math.max(1, Math.round(baseHeight * ratio));
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("El dispositivo no pudo preparar la imagen.");
+    context.fillStyle = "#fff";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+    for (const quality of [0.87, 0.77, 0.65]) {
+      const compressed = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, "image/jpeg", quality)
+      );
+      if (compressed && compressed.size <= MAX_RECEIPT_BYTES) {
+        const cleanName = source.name.replace(/\.[^.]+$/, "").replace(/[^A-Za-z0-9_-]/g, "_").slice(0, 55) || "comprobante";
+        return {
+          file: new File([compressed], cleanName + ".jpg", {type: "image/jpeg"}),
+          mime: "image/jpeg"
+        };
+      }
+    }
+  }
+  throw new Error("No fue posible reducir la fotografía a menos de 4 MB.");
 }
 
 export default function RegistrationForm({ iframeUrl }: { iframeUrl: string }) {
