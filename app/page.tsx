@@ -78,7 +78,7 @@ export default function Home() {
 
             <div className="ci-institution">
               <div className="ci-seal">
-                <img src="/images/duat-no7-emblema.webp" alt="Emblema proporcionado de Duat No. 7" width="240" height="240" />
+                <img src="/images/duat-no7-emblema.svg" alt="Emblema proporcionado de Duat No. 7" width="240" height="240" />
               </div>
               <span>DUAT <b>NO. 7</b></span>
             </div>
