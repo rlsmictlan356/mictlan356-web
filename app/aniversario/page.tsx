@@ -12,9 +12,9 @@ export const metadata: Metadata = {
 const googleCalendar = new URL("https://calendar.google.com/calendar/render");
 googleCalendar.searchParams.set("action", "TEMPLATE");
 googleCalendar.searchParams.set("text", "V Aniversario de la R∴L∴S∴ Mictlán No. 356");
-googleCalendar.searchParams.set("dates", "20261128T130000/20261128T130000");
+googleCalendar.searchParams.set("dates", "20261128T130000/20261128T140000");
 googleCalendar.searchParams.set("ctz", "America/Mexico_City");
-googleCalendar.searchParams.set("details", "Inicio: 13:00 h. Rooftop del V∴H∴ Ragnar. La hora de término está pendiente de confirmar.");
+googleCalendar.searchParams.set("details", "Inicio: 13:00 h. Rooftop del V∴H∴ Ragnar. Fin real por confirmar; el bloque de 1 hora es solo un marcador de calendario.");
 googleCalendar.searchParams.set("location", "Patricio Sanz 236, Ciudad de México, México");
 
 const maps = "https://www.google.com/maps/search/?api=1&query=Patricio%20Sanz%20236%2C%20Ciudad%20de%20M%C3%A9xico%2C%20M%C3%A9xico";
