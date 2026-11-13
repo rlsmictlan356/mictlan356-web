@@ -3,10 +3,21 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 
 const MAX_RECEIPT_BYTES = 4 * 1024 * 1024;
+const MAX_SOURCE_IMAGE_BYTES = 20 * 1024 * 1024;
+const TARGET_IMAGE_BYTES = Math.floor(1.5 * 1024 * 1024);
 const RESPONSE_KIND = "mictlan-anniversary-2026-result";
 const POST_FRAME = "mictlan-anniversary-post-frame";
 type State = "idle" | "sending" | "success" | "error";
 type Reply = { kind: string; ok: boolean; id: string; alreadyRegistered?: boolean; message?: string };
+type StatusReply = {
+  kind: "mictlan-anniversary-2026-status";
+  id: string;
+  privateSaved: boolean;
+  organizersSaved: boolean;
+  receiptSaved?: boolean;
+  error: boolean;
+};
+type StatusWindow = Window & { MictlanRegistryCallback?: (result: StatusReply) => void };
 
 function createId() {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") return crypto.randomUUID();
@@ -27,6 +38,83 @@ function fileToBase64(file: File): Promise<string> {
   });
 }
 
+
+/**
+ * Preserve small JPG/PNG files unchanged. Convert large images and supported
+ * HEIC/HEIF/WEBP receipts into a readable JPG under the Apps Script 4 MB limit.
+ * PDF is not rasterized: PDF > 4 MB must be reduced by the sender.
+ */
+async function prepareReceipt(source: File): Promise<{file: File; mime: string}> {
+  const ext = source.name.toLowerCase().split(".").pop() || "";
+  const mime = source.type ||
+    (ext === "pdf" ? "application/pdf" :
+    ext === "png" ? "image/png" :
+    ext === "jpg" || ext === "jpeg" ? "image/jpeg" :
+    ext === "webp" ? "image/webp" :
+    ext === "heic" ? "image/heic" :
+    ext === "heif" ? "image/heif" : "");
+
+  if (mime === "application/pdf") {
+    if (source.size < 1 || source.size > MAX_RECEIPT_BYTES) {
+      throw new Error("El PDF debe pesar 4 MB o menos. Comprímelo antes de adjuntarlo.");
+    }
+    return {file: source, mime};
+  }
+
+  if (!["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"].includes(mime)) {
+    throw new Error("Adjunta un comprobante JPG, PNG, HEIC, WEBP o PDF.");
+  }
+  if (source.size < 1 || source.size > MAX_SOURCE_IMAGE_BYTES) {
+    throw new Error("La fotografía pesa más de 20 MB. Usa una versión de menor tamaño.");
+  }
+  if ((mime === "image/jpeg" || mime === "image/png") && source.size <= TARGET_IMAGE_BYTES) {
+    return {file: source, mime};
+  }
+
+  const url = URL.createObjectURL(source);
+  let image: HTMLImageElement;
+  try {
+    image = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error("No se pudo convertir esta imagen. Guárdala como JPG o PNG e inténtalo de nuevo."));
+      img.src = url;
+    });
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+
+  const baseWidth = image.naturalWidth || image.width;
+  const baseHeight = image.naturalHeight || image.height;
+  if (!baseWidth || !baseHeight) throw new Error("La imagen no tiene dimensiones válidas.");
+
+  for (const maxSide of [2200, 1800, 1500, 1200]) {
+    const ratio = Math.min(1, maxSide / Math.max(baseWidth, baseHeight));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(baseWidth * ratio));
+    canvas.height = Math.max(1, Math.round(baseHeight * ratio));
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("El dispositivo no pudo preparar la imagen.");
+    context.fillStyle = "#fff";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+    for (const quality of [0.87, 0.77, 0.65]) {
+      const compressed = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, "image/jpeg", quality)
+      );
+      if (compressed && compressed.size <= TARGET_IMAGE_BYTES) {
+        const cleanName = source.name.replace(/\.[^.]+$/, "").replace(/[^A-Za-z0-9_-]/g, "_").slice(0, 55) || "comprobante";
+        return {
+          file: new File([compressed], cleanName + ".jpg", {type: "image/jpeg"}),
+          mime: "image/jpeg"
+        };
+      }
+    }
+  }
+  throw new Error("No fue posible reducir la fotografía a menos de 4 MB.");
+}
+
 export default function RegistrationForm({ iframeUrl }: { iframeUrl: string }) {
   const configured = /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec(?:\?.*)?$/.test(iframeUrl);
   const [name, setName] = useState("");
@@ -43,6 +131,7 @@ export default function RegistrationForm({ iframeUrl }: { iframeUrl: string }) {
   const transportFrame = useRef<HTMLIFrameElement>(null);
   const idRef = useRef("");
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const receivedPartialRef = useRef(false);
 
   useEffect(() => {
     const onReply = (event: MessageEvent) => {
@@ -70,12 +159,58 @@ export default function RegistrationForm({ iframeUrl }: { iframeUrl: string }) {
         setState("error");
       }
     };
+    const onStatus = (reply: StatusReply) => {
+      if (!reply || reply.kind !== "mictlan-anniversary-2026-status" ||
+        reply.id !== idRef.current || reply.error) return;
+
+      if (reply.privateSaved && reply.organizersSaved) {
+        if (timerRef.current) clearTimeout(timerRef.current);
+        timerRef.current = null;
+        setFolio(reply.id);
+        setMessage("El registro se verificó en ambas hojas. El Ecónomo revisará el pago.");
+        setState("success");
+      } else if (reply.privateSaved || reply.organizersSaved || reply.receiptSaved) {
+        // Never claim a full submission when a receipt or only one sheet exists.
+        receivedPartialRef.current = true;
+      }
+    };
+    (window as StatusWindow).MictlanRegistryCallback = onStatus;
     window.addEventListener("message", onReply);
     return () => {
       window.removeEventListener("message", onReply);
+      delete (window as StatusWindow).MictlanRegistryCallback;
       if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, []);
+
+  useEffect(() => {
+    if (state !== "sending") return;
+
+    function verifyPersistedRegistration() {
+      if (!idRef.current) return;
+      const query = new URL(iframeUrl);
+      query.searchParams.set("status", "1");
+      query.searchParams.set("id", idRef.current);
+      query.searchParams.set("callback", "MictlanRegistryCallback");
+      query.searchParams.set("_", String(Date.now()));
+
+      // JSONP is used for status only: no personal information or receipt data.
+      // Apps Script ContentService redirects across origins and doesn't expose CORS.
+      const script = document.createElement("script");
+      script.src = query.toString();
+      script.async = true;
+      script.onload = () => script.remove();
+      script.onerror = () => script.remove();
+      document.head.appendChild(script);
+    }
+
+    const first = window.setTimeout(verifyPersistedRegistration, 7000);
+    const cycle = window.setInterval(verifyPersistedRegistration, 12000);
+    return () => {
+      clearTimeout(first);
+      clearInterval(cycle);
+    };
+  }, [state, iframeUrl]);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -94,29 +229,26 @@ export default function RegistrationForm({ iframeUrl }: { iframeUrl: string }) {
     if (attendance === "si" && !meat.trim()) {
       setState("error"); setMessage("Indica el corte de carne."); return;
     }
-    if (!receipt || receipt.size < 1 || receipt.size > MAX_RECEIPT_BYTES) {
-      setState("error"); setMessage("Adjunta un comprobante de hasta 4 MB."); return;
-    }
-    const ext = receipt.name.toLowerCase().split(".").pop();
-    const mime = receipt.type || (
-      ext === "pdf" ? "application/pdf" :
-      ext === "png" ? "image/png" :
-      ext === "jpg" || ext === "jpeg" ? "image/jpeg" : ""
-    );
-    if (!["image/jpeg", "image/png", "application/pdf"].includes(mime)) {
-      setState("error"); setMessage("Solo se permiten archivos PDF, JPG y PNG."); return;
+    if (!receipt) {
+      setState("error"); setMessage("Selecciona un comprobante."); return;
     }
     setState("sending");
     try {
-      // A stable ID prevents duplicates if the response gets lost and the user retries.
+      const prepared = await prepareReceipt(receipt);
+      // A stable ID prevents duplicates if the response is lost and the user retries.
       if (!idRef.current) idRef.current = createId();
+      receivedPartialRef.current = false;
       const payload = JSON.stringify({
         id: idRef.current,
         name: name.trim(), attendance, guests: guestCount,
         meat: attendance === "si" ? meat.trim() : "",
         utensils: attendance === "si" ? utensils.trim() : "",
         website: "",
-        receipt: { name: receipt.name, mime, base64: await fileToBase64(receipt) }
+        receipt: {
+          name: prepared.file.name,
+          mime: prepared.mime,
+          base64: await fileToBase64(prepared.file)
+        }
       });
       if (!transportForm.current || !transportValue.current) throw new Error("No está disponible el envío.");
       transportValue.current.value = payload;
@@ -125,8 +257,10 @@ export default function RegistrationForm({ iframeUrl }: { iframeUrl: string }) {
       if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = setTimeout(() => {
         setState("error");
-        setMessage("No recibimos confirmación. Antes de reenviar, consulta con el Ecónomo si llegó el registro para evitar duplicados.");
-      }, 60000);
+        setMessage(receivedPartialRef.current
+          ? "El comprobante o parte de tu registro sí llegó, pero falta completar la confirmación. No vuelvas a enviar: consulta con el Ecónomo y conserva el folio " + idRef.current + "."
+          : "No se pudo comprobar la recepción del registro. No se confirmará el envío hasta verificarlo; antes de reintentar consulta con el Ecónomo.");
+      }, 100000);
     } catch (error) {
       setState("error");
       setMessage(error instanceof Error ? error.message : "No se pudo enviar el comprobante.");
@@ -184,8 +318,9 @@ export default function RegistrationForm({ iframeUrl }: { iframeUrl: string }) {
           </div>
 
           <label htmlFor="ann-receipt">Comprobante de pago <span>*</span></label>
-          <input id="ann-receipt" type="file" accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf" onChange={(e) => setReceipt(e.target.files?.[0] || null)} required disabled={state === "sending"} />
-          <p className="ann-native-hint">JPG, PNG o PDF · Máximo 4 MB. El archivo se guarda de forma privada.</p>
+          <input id="ann-receipt" type="file" accept=".jpg,.jpeg,.png,.webp,.heic,.heif,.pdf,image/jpeg,image/png,image/webp,image/heic,image/heif,application/pdf" onChange={(e) => setReceipt(e.target.files?.[0] || null)} required disabled={state === "sending"} />
+          <p className="ann-native-hint">JPG, PNG, HEIC, WEBP o PDF. Las fotografías de hasta 20 MB se reducen automáticamente. Los PDF deben pesar 4 MB o menos.</p>
+          {receipt && <p className="ann-native-selected">Archivo seleccionado: <strong>{receipt.name}</strong> ({(receipt.size / (1024 * 1024)).toFixed(2)} MB)</p>}
 
           {state === "error" && <p className="ann-native-error" role="alert">{message}</p>}
           <button className="ann-native-submit" type="submit" disabled={state === "sending"}>

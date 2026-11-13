@@ -41,11 +41,62 @@ function doPost(e) {
   // Escape "<" to prevent accidental closing of the script tag.
   var safeResult = JSON.stringify(response).replace(/</g, "\\u003c");
   var html = '<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>' +
-    '<script>window.top.postMessage(' + safeResult +
-    ', "https://rls-mictlan356.web.app");</script>' +
-    '</body></html>';
+    '<script>(function(){var d=' + safeResult +
+    ';try{window.parent.postMessage(d,"https://rls-mictlan356.web.app");}catch(e){}' +
+    'try{window.top.postMessage(d,"https://rls-mictlan356.web.app");}catch(e){}' +
+    '})();</script></body></html>';
 
   return HtmlService.createHtmlOutput(html)
     .setTitle("Confirmación del registro Mictlán")
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+
+/**
+ * Acuse verificable para formularios externos sin leer HTML de un iframe.
+ * Se publica como ?status=1&id=<uuid>&callback=MictlanRegistryCallback
+ * Devuelve únicamente la presencia del UUID en ambas hojas, sin nombres,
+ * correos, recibos, datos bancarios ni enlaces privados.
+ *
+ * ContentService responde como JavaScript para ser cargado con <script src>
+ * desde Firebase, evitando problemas de CORS y de postMessage de iframes.
+ */
+function registrationStatusResponse_(params) {
+  var callback = params && params.callback;
+  if (callback !== "MictlanRegistryCallback") {
+    return ContentService.createTextOutput("/* Callback no autorizado */")
+      .setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
+
+  var id = clean_(params.id, 90);
+  var result = {
+    kind: "mictlan-anniversary-2026-status",
+    id: id,
+    privateSaved: false,
+    organizersSaved: false,
+    receiptSaved: false,
+    error: false
+  };
+  try {
+    if (!/^[A-Za-z0-9-]{16,90}$/.test(id)) throw new Error("Identificador no válido.");
+    var privateSheet = SpreadsheetApp.openById(PRIVATE_SPREADSHEET_ID).getSheetByName(PRIVATE_SHEET_NAME);
+    var organizersSheet = SpreadsheetApp.openById(ORGANIZERS_SPREADSHEET_ID).getSheetByName(ORGANIZERS_SHEET_NAME);
+    if (!privateSheet || !organizersSheet) throw new Error("Hojas no disponibles.");
+    result.privateSaved = Boolean(privateSheet.getRange("A2:A").createTextFinder(id).matchEntireCell(true).findNext());
+    result.organizersSaved = Boolean(organizersSheet.getRange("A2:A").createTextFinder(id).matchEntireCell(true).findNext());
+    var files = getReceiptsFolder_().getFiles();
+    while (files.hasNext()) {
+      if (files.next().getName().indexOf(id + "_") === 0) {
+        result.receiptSaved = true;
+        break;
+      }
+    }
+  } catch (err) {
+    result.error = true;
+    console.error("registrationStatusResponse_ failed: " + String(err));
+  }
+
+  return ContentService.createTextOutput(
+    "MictlanRegistryCallback(" + JSON.stringify(result).replace(/</g, "\\u003c") + ");"
+  ).setMimeType(ContentService.MimeType.JAVASCRIPT);
 }
