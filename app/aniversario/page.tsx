@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import RegistrationForm from "./RegistrationForm";
+import { anniversaryFormUrl } from "./config";
 import "./aniversario.css";
 
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ googleCalendar.searchParams.set("details", "Inicio: 13:00 h. Rooftop del V∴H�
 googleCalendar.searchParams.set("location", "Patricio Sanz 236, Ciudad de México, México");
 
 const maps = "https://www.google.com/maps/search/?api=1&query=Patricio%20Sanz%20236%2C%20Ciudad%20de%20M%C3%A9xico%2C%20M%C3%A9xico";
-const formUrl = process.env.NEXT_PUBLIC_MICTLAN_ANIVERSARIO_FORM_URL ?? "";
+const formUrl = anniversaryFormUrl;
 
 export default function AniversarioPage() {
   return (
