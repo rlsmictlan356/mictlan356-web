@@ -1,58 +1,53 @@
-/* Asistencia · Mictlán 356 — isolated from the home page */
+/* Blanco Imperial · attendance: preserves the original embedded Google Form */
 .asistencia-page {
-  --ink: #090909;
-  --gold: #bd9854;
-  --gold-light: #ead8ac;
-  --parchment: #f1e9dc;
-  --faded: #b7ada0;
+  --paper: #f9f7f1;
+  --ink: #4f4334;
+  --gold: #af8b55;
+  --accent: #755938;
   position: relative;
   isolation: isolate;
   min-height: 100vh;
+  padding: 0 clamp(16px, 4vw, 64px);
   overflow: hidden;
-  padding: 0 clamp(18px, 4vw, 60px);
-  color: var(--parchment);
   background:
-    radial-gradient(circle at 50% 19%, rgba(107, 22, 28, .26), transparent 39%),
-    radial-gradient(ellipse at 50% 76%, rgba(123, 88, 40, .075), transparent 55%),
-    var(--ink);
-  font-family: Georgia, "Times New Roman", serif;
+    radial-gradient(ellipse at 50% 4%, rgba(255,255,255,.98), transparent 65%),
+    linear-gradient(160deg, #fffdf9, #f5efe5);
+  color: var(--ink);
+  font-family: "Cormorant Garamond", Georgia, serif;
 }
 .asistencia-page::before {
   position: absolute;
+  content: "";
   z-index: -1;
   inset: 0;
-  content: "";
   pointer-events: none;
-  opacity: .11;
-  background: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,.018) 4px 5px);
+  opacity: .16;
+  background-image: repeating-linear-gradient(0deg, transparent 0 4px, rgba(123,98,55,.05) 4px 5px);
 }
 .asistencia-halo {
   position: absolute;
   z-index: -1;
   left: 50%;
-  top: 80px;
-  width: min(76vw, 740px);
-  aspect-ratio: 1;
-  border: 1px solid rgba(202, 157, 86, .11);
-  border-radius: 50%;
+  top: 68px;
+  width: min(95vw, 850px);
+  height: 600px;
+  border: 1px solid rgba(176, 137, 77, .12);
+  border-bottom: 0;
+  border-radius: 50% 50% 0 0;
   transform: translateX(-50%);
   pointer-events: none;
 }
-.asistencia-halo::before,
-.asistencia-halo::after {
-  content: "";
-  position: absolute;
-  border-radius: 50%;
-  inset: 27px;
-  border: 1px solid rgba(202, 157, 86, .065);
+.asistencia-halo::before, .asistencia-halo::after {
+  position: absolute; content: ""; inset: 16px;
+  border: 1px solid rgba(176,137,77,.07);
+  border-bottom: 0;
+  border-radius: inherit;
 }
-.asistencia-halo::after {
-  inset: 54px;
-}
+.asistencia-halo::after { inset: 30px; }
 .asistencia-border {
   position: absolute;
-  inset: 18px;
-  border: 1px solid rgba(188, 151, 79, .16);
+  inset: 9px;
+  border: 1px solid rgba(175,139,85,.38);
   pointer-events: none;
 }
 .asistencia-header {
@@ -61,224 +56,158 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 34px 0 16px;
+  padding: 28px 4px 16px;
   gap: 12px;
+  border-bottom: 1px solid rgba(175,139,85,.35);
 }
-.asistencia-home-link,
-.asistencia-header-right {
-  font: 600 .69rem/1.3 Arial, Helvetica, sans-serif;
+.asistencia-home-link, .asistencia-header-right {
+  font: 600 11px/1.4 Inter, Arial, Helvetica, sans-serif;
   text-transform: uppercase;
-  letter-spacing: .17em;
-  color: #bea875;
+  letter-spacing: .12em;
+  color: #8f734c;
   text-decoration: none;
 }
-.asistencia-home-link:hover,
-.asistencia-home-link:focus-visible {
-  color: #fff0ce;
-}
-.asistencia-arrow {
-  font-size: 1rem;
-  margin-right: 8px;
-}
+.asistencia-home-link:hover, .asistencia-home-link:focus-visible { color: #594122; }
+.asistencia-arrow { font-size: 18px; margin-right: 8px; }
 .asistencia-intro {
-  width: min(100%, 760px);
-  margin: 20px auto 0;
+  width: min(100%, 730px);
+  margin: 36px auto 0;
   text-align: center;
 }
-.asistencia-seal {
-  position: relative;
-  width: clamp(128px, 19vw, 198px);
-  margin: 0 auto 10px;
-}
-.asistencia-seal img {
-  display: block;
-  width: 100%;
-  height: auto;
-  filter: drop-shadow(0 5px 13px rgba(0,0,0,.65)) drop-shadow(0 0 12px rgba(203,162,89,.14));
-}
+.asistencia-seal { width: clamp(110px, 18vw, 172px); margin: 0 auto 15px; }
+.asistencia-seal img { display: block; width: 100%; height: auto; filter: drop-shadow(0 5px 13px rgba(101,75,43,.12)); }
 .asistencia-eyebrow {
-  margin: 10px 0 0;
-  color: var(--gold);
-  font: 500 .69rem/1.5 Arial, Helvetica, sans-serif;
+  margin: 12px auto 0; color: #8c714e;
+  font: 600 11px/1.5 Inter, Arial, sans-serif;
   text-transform: uppercase;
-  letter-spacing: .24em;
+  letter-spacing: .18em;
 }
 .asistencia-ornament {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 15px;
-  margin: 16px auto 20px;
-  color: var(--gold);
+  gap: 12px;
+  margin: 18px auto;
+  color: #ab8b60;
 }
 .asistencia-ornament > span:not(.asistencia-diamond) {
   width: 72px;
   height: 1px;
-  background: linear-gradient(to right, transparent, #96703b);
+  background: linear-gradient(90deg, transparent, #aa8a58);
 }
-.asistencia-ornament > span:last-child {
-  transform: rotate(180deg);
-}
-.asistencia-diamond {
-  font-size: .58rem;
-}
+.asistencia-ornament > span:last-child { transform: rotate(180deg); }
+.asistencia-diamond { font-size: 11px; }
 .asistencia-page h1 {
-  margin: 0 auto 22px;
-  color: #f2e6d4;
-  font: 400 clamp(2.75rem, 6.6vw, 5.2rem)/1.05 Georgia, "Times New Roman", serif;
-  letter-spacing: -.035em;
+  margin: 0 auto 18px;
+  color: #775c36;
+  font: 500 clamp(44px, 8vw, 78px)/.98 "Cormorant Garamond", Georgia, serif;
+  letter-spacing: -.03em;
 }
-.asistencia-page h1 em {
-  color: #d7b77c;
-  font-weight: 400;
-}
+.asistencia-page h1 em { font-style: normal; color: #97764a; }
 .asistencia-lead {
-  max-width: 530px;
+  max-width: 550px;
   margin: 0 auto;
-  font-size: clamp(1.05rem, 2.1vw, 1.23rem);
-  line-height: 1.76;
-  color: #c8bdb0;
+  font: 400 clamp(19px, 2.8vw, 25px)/1.4 "Cormorant Garamond", Georgia, serif;
+  color: #6b5e4d;
 }
 .asistencia-notice {
   max-width: 570px;
-  margin: 31px auto 0;
-  padding: 20px 26px;
-  border: 1px solid rgba(194, 158, 91, .37);
-  background: linear-gradient(135deg, rgba(102, 75, 39, .17), rgba(83, 20, 25, .12));
+  margin: 26px auto 0;
+  padding: 19px 24px;
+  border: 1px solid #d1b993;
+  background: rgba(255,255,255,.54);
 }
 .asistencia-notice-label {
   display: block;
-  font: 700 .67rem/1.45 Arial, Helvetica, sans-serif;
-  letter-spacing: .16em;
+  font: 600 10px/1.4 Inter, Arial, sans-serif;
+  letter-spacing: .13em;
   text-transform: uppercase;
-  color: #d4b27d;
+  color: #916b3d;
 }
 .asistencia-notice p {
-  max-width: 440px;
-  margin: 8px auto 0;
-  font-size: 1.05rem;
-  line-height: 1.55;
-  color: #e7dcc9;
+  max-width: 430px;
+  margin: 9px auto 0;
+  font: italic 20px/1.28 "Cormorant Garamond", Georgia, serif;
+  color: #4d4438;
 }
 .asistencia-form-section {
   width: min(100%, 820px);
-  margin: 66px auto 0;
+  margin: 50px auto 0;
   text-align: center;
 }
 .asistencia-form-heading {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 .asistencia-form-rule {
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(195,154,83,.45));
+  background: linear-gradient(90deg, transparent, rgba(164,123,69,.43));
 }
-.asistencia-form-rule:last-child {
-  transform: rotate(180deg);
-}
+.asistencia-form-rule:last-child { transform: rotate(180deg); }
 .asistencia-page h2 {
   margin: 0;
-  color: #e4c895;
-  font: 400 clamp(1.3rem, 3vw, 1.8rem)/1.35 Georgia, "Times New Roman", serif;
+  color: #795f3f;
+  font: 500 clamp(27px, 4vw, 38px)/1.15 "Cormorant Garamond", Georgia, serif;
 }
 .asistencia-form-helper {
-  max-width: 520px;
-  margin: 14px auto 24px;
-  color: #ada397;
-  font: .92rem/1.6 Arial, Helvetica, sans-serif;
+  max-width: 540px;
+  margin: 15px auto 22px;
+  color: #7c7062;
+  font: 400 13px/1.65 Inter, Arial, sans-serif;
 }
 .asistencia-form-shell {
   overflow: hidden;
-  border: 1px solid rgba(197, 159, 89, .35);
-  border-radius: 12px;
-  background: #f3f0ea;
-  box-shadow: 0 28px 80px rgba(0,0,0,.42);
+  border: 1px solid #cbb38f;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 14px 40px rgba(99,73,46,.12);
 }
 .asistencia-form-shell iframe {
   display: block;
   width: 100%;
-  height: 1200px;
+  height: 1100px;
   border: 0;
-  background: #f3f0ea;
+  background: #fff;
 }
 .asistencia-external-link {
   display: inline-flex;
-  justify-content: center;
-  align-items: center;
   gap: 9px;
-  margin: 24px auto 0;
-  color: #dcc18e;
-  font: 600 .8rem/1.4 Arial, Helvetica, sans-serif;
-  letter-spacing: .025em;
+  align-items: center;
+  margin: 22px auto 0;
+  color: #947043;
+  font: 600 12px/1.5 Inter, Arial, sans-serif;
   text-underline-offset: 5px;
 }
-.asistencia-external-link:hover,
-.asistencia-external-link:focus-visible {
-  color: #fff0c9;
-}
+.asistencia-external-link:hover { color: #593c20; }
 .asistencia-footer {
-  padding: 78px 0 48px;
+  padding: 62px 0 45px;
   text-align: center;
-  color: #a18c68;
+  color: #95764c;
 }
-.asistencia-footer-mark {
-  font-size: 1.1rem;
-  color: #ad8748;
-}
+.asistencia-footer-mark { font-size: 26px; }
 .asistencia-footer p {
-  margin: 12px 0 5px;
-  font: 600 .72rem/1.4 Arial, Helvetica, sans-serif;
+  margin: 8px 0 5px;
+  font: 600 11px/1.4 Inter, Arial, sans-serif;
   text-transform: uppercase;
-  letter-spacing: .13em;
+  letter-spacing: .1em;
 }
 .asistencia-footer small {
-  font-size: .78rem;
-  color: #746a5e;
+  font: italic 17px/1.3 "Cormorant Garamond", Georgia, serif;
+  color: #88765e;
 }
 @media (max-width: 650px) {
-  .asistencia-page {
-    padding: 0 18px;
-  }
-  .asistencia-border {
-    inset: 8px;
-  }
-  .asistencia-header {
-    padding: 23px 5px 8px;
-  }
-  .asistencia-header-right {
-    font-size: .62rem;
-  }
-  .asistencia-intro {
-    margin-top: 28px;
-  }
-  .asistencia-page h1 {
-    font-size: clamp(2.9rem, 11vw, 4.3rem);
-  }
-  .asistencia-eyebrow {
-    font-size: .61rem;
-    letter-spacing: .17em;
-  }
-  .asistencia-lead {
-    font-size: 1rem;
-  }
-  .asistencia-notice {
-    padding: 19px 16px;
-  }
-  .asistencia-form-section {
-    margin-top: 55px;
-  }
-  .asistencia-form-heading {
-    gap: 8px;
-  }
-  .asistencia-page h2 {
-    font-size: 1.35rem;
-  }
-  .asistencia-form-shell iframe {
-    height: 1300px;
-  }
-  .asistencia-footer {
-    padding: 55px 0 35px;
-  }
+  .asistencia-page { padding: 0 16px; }
+  .asistencia-border { inset: 8px; }
+  .asistencia-header { padding: 22px 2px 14px; }
+  .asistencia-header-right { font-size: 10px; }
+  .asistencia-intro { margin-top: 20px; }
+  .asistencia-page h1 { font-size: clamp(42px,11vw,65px); }
+  .asistencia-eyebrow { font-size: 10px; letter-spacing: .1em; }
+  .asistencia-notice { padding: 16px 14px; }
+  .asistencia-form-section { margin-top: 41px; }
+  .asistencia-form-heading { gap: 8px; }
+  .asistencia-form-shell iframe { height: 1300px; }
+  .asistencia-footer { padding: 50px 0 35px; }
 }
