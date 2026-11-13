@@ -368,3 +368,296 @@ form.ann-native-transport {display:none!important}
   .ann-native-form input:not([type="hidden"]),.ann-native-form select,.ann-native-form textarea {font-size:16px}
   .ann-native-form label,.ann-native-conditional label {font-size:13px}
 }
+
+
+/* V ANIVERSARIO / GUARDIAN DE OBSIDIANA — MOBILE-FIRST REDESIGN
+   Visual layer only. No registration or payment logic is changed. */
+.ann-page{
+  --ann-obsidian:#0e0a09;
+  --ann-rock:#211410;
+  --ann-gold:#d19a63;
+  --ann-bronze:#f1bc79;
+  --ann-ivory:#f3e5cf;
+  --ann-muted:#c4aa92;
+  --ann-rule:rgba(220,151,92,.31);
+  color:var(--ann-ivory);
+  background:radial-gradient(ellipse at 62% 12%,rgba(115,29,23,.16),transparent 44%),linear-gradient(170deg,#110c0b,#0b0808 58%,#180f0d);
+}
+.ann-page-outline{border-color:rgba(220,151,92,.18)}
+.ann-page-outline:before,.ann-page-outline:after{border-color:#bb6a43}
+.ann-eyebrow,.ann-overline,.ann-date-roman,.ann-bank-label{color:#e0ac79;letter-spacing:.17em}
+.ann-page h2{font-family:"Cinzel",Georgia,serif;letter-spacing:-.045em;font-size:clamp(28px,3.4vw,44px);line-height:1.2;color:#f1d5af}
+.ann-page h3{color:#efc899}
+.ann-hero{
+  min-height:735px;
+  padding:44px clamp(24px,5vw,85px) 27px;
+  background:
+    radial-gradient(ellipse at 23% 55%,rgba(131,27,23,.36),transparent 49%),
+    radial-gradient(ellipse at 10% 18%,rgba(166,92,44,.12),transparent 52%),
+    repeating-linear-gradient(135deg,transparent 0 21px,rgba(226,133,71,.012) 22px 23px),
+    linear-gradient(110deg,#19110e 0%,#0d0909 72%);
+  border-bottom:1px solid rgba(221,142,85,.36);
+}
+.ann-hero:before{
+  inset:15px;
+  opacity:.65;
+  background:repeating-linear-gradient(0deg,transparent 0 81px,rgba(190,106,67,.025) 82px 83px),repeating-linear-gradient(90deg,transparent 0 81px,rgba(190,106,67,.022) 82px 83px);
+}
+.ann-hero:after{height:140px;background:linear-gradient(transparent,#100b0a)}
+.ann-hero-sun{border-color:rgba(185,76,50,.18);box-shadow:0 0 0 80px rgba(142,35,27,.026),0 0 0 160px rgba(142,35,27,.013)}
+.ann-hero-sun:before,.ann-hero-sun:after{border-color:rgba(179,78,46,.15)}
+.ann-hero-with-art .ann-hero-inner{
+  max-width:1350px;
+  min-height:650px;
+  display:grid;
+  grid-template-columns:minmax(0,.98fr) minmax(0,1.02fr);
+  gap:clamp(8px,3vw,55px);
+  align-items:center;
+}
+.ann-hero-with-art .ann-hero-copy{max-width:680px;min-width:0;padding:18px 0 24px;text-align:left;align-items:flex-start}
+.ann-official-emblem{width:clamp(105px,11vw,148px);filter:drop-shadow(0 0 23px rgba(161,62,28,.2))}
+.ann-roman-lockup{opacity:.33;font-size:clamp(190px,23vw,345px);top:105px;left:34%}
+.ann-hero-with-art .ann-date-roman{margin:20px 0 8px}
+.ann-page h1{
+  font-size:clamp(48px,5.6vw,82px);
+  font-weight:500;
+  letter-spacing:-.044em;
+  line-height:1.14;
+  color:#ffdfb4;
+  text-shadow:0 3px 35px #080504;
+}
+.ann-page h1>span{color:#ac3a30}
+.ann-loge-name{font-size:clamp(20px,2.35vw,30px);color:#f3ca8f;margin:10px 0 15px}
+.ann-hero-copy .ann-flourish{color:#bd693c}
+.ann-motto{color:#dfbea6;font-size:clamp(22px,2.3vw,29px);max-width:470px}
+.ann-hero-cta{gap:10px}
+.ann-button{min-height:52px;border-color:rgba(239,166,98,.58);font-weight:600;letter-spacing:.025em}
+.ann-button-primary{background:linear-gradient(120deg,#c78b56,#efc087);color:#28160d!important}
+.ann-button-outline{background:rgba(27,15,13,.86);color:#f1d5b2}
+.ann-button:hover,.ann-button:focus-visible{background:#f7d199;color:#29160b!important}
+.ann-hero-venue{font-size:12px;color:#d2ad8d}
+.ann-hero-bottom{color:#b7774e;letter-spacing:.18em}
+.ann-hero-art{min-height:540px;max-height:790px;align-self:stretch}
+.ann-hero-art:before{background:radial-gradient(ellipse at 58% 53%,rgba(146,31,26,.33),transparent 65%);filter:blur(30px)}
+.ann-hero-art-frame{height:min(755px,82svh);overflow:visible}
+.ann-hero-art-frame img{max-width:100%;max-height:100%;width:auto;height:100%;object-fit:contain;object-position:center left;filter:drop-shadow(-23px 18px 40px rgba(0,0,0,.66))}
+.ann-body{max-width:1140px}
+.ann-legacy{gap:clamp(22px,4vw,65px);padding:85px 0 90px}
+.ann-legacy-symbol{background:radial-gradient(circle,rgba(123,37,29,.19),transparent 72%);border-color:rgba(221,151,91,.37)}
+.ann-legacy-symbol span{color:#a95a41}
+.ann-legacy-text>p:last-child{color:#d7c0a9}
+.ann-event{padding:80px 0 86px}
+.ann-event-grid{background:linear-gradient(117deg,rgba(117,33,25,.22),transparent 68%),#1b1210;border-color:rgba(212,140,81,.43)}
+.ann-event-cell{padding:26px 25px}
+.ann-event-cell:before{border-color:rgba(185,80,48,.14)}
+.ann-detail-number{color:rgba(161,76,47,.16)}
+.ann-event-cell>span:nth-child(2){color:#cb7e55}
+.ann-event-cell strong{color:#f8dfbd;font-size:clamp(21px,2.2vw,27px)}
+.ann-event-cell small{color:#d0b4a0}
+.ann-event-actions a{background:#1d1311;color:#efd0a9;min-height:47px}
+.ann-participation{padding-bottom:90px}
+.ann-guidelines{background:rgba(220,143,92,.25)}
+.ann-guidelines>div{padding:24px 20px 27px;background:radial-gradient(ellipse at 100% 0%,rgba(130,31,24,.23),transparent 68%),#1a1210}
+.ann-guidelines>div>span{color:#a9583c}
+.ann-guidelines h3{color:#f6d4a7}
+.ann-guidelines p{color:#ceb5a0;font-size:13px}
+.ann-payment{padding:80px 0 90px;gap:clamp(23px,5vw,70px)}
+.ann-bank-card{background:radial-gradient(ellipse at 78% 2%,rgba(130,36,27,.28),transparent 65%),#1b1210;border-color:rgba(219,156,93,.55)}
+.ann-bank-card h3{color:#f2c48c}
+.ann-bank-card dd{color:#f2debd}
+.ann-copy-control button{border-color:rgba(230,156,88,.42);color:#f7c88e;min-height:38px;font-size:11px}
+.ann-registration{padding:80px 0 95px}
+.ann-registration:before{background:radial-gradient(ellipse at 50% 30%,rgba(153,34,25,.20),transparent 65%)}
+.ann-form-gateway{background:radial-gradient(ellipse at 50% 0%,rgba(143,41,28,.24),transparent 65%),#201411;border-color:rgba(236,166,96,.52)}
+.ann-form-gateway h3{font:500 clamp(26px,3.5vw,36px)/1.25 "Cinzel",Georgia,serif;color:#f4d5aa}
+.ann-gateway-intro{color:#dcc2a7}
+.ann-gateway-link{background:linear-gradient(105deg,#c48c5c,#efbf84);border-color:#f3cb95;color:#23150e!important;min-height:60px}
+.ann-gateway-link:hover{background:#f5d19b}
+.ann-gateway-notice{border-color:rgba(223,151,88,.4);background:rgba(112,33,26,.13);color:#dcc3a6}
+.ann-gateway-notice strong{color:#ffd29d}
+.ann-footer{padding-bottom:115px}
+.ann-footer p{color:#e1c8af}
+.ann-footer strong{color:#f0bf82}
+.ann-mobile-cta{display:none}
+
+
+
+
+/* COMPOSICIÓN DE INVITACIÓN — Xolo siempre a la izquierda.
+   Formulario nativo y toda la lógica de registro intactos. */
+.ann-page{--ann-ivory:#f3e5cf;overflow-x:clip}
+.ann-hero-with-art .ann-hero-inner{
+  grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);
+  gap:clamp(16px,3.4vw,64px);
+}
+.ann-hero-with-art .ann-hero-art{
+  grid-column:1;grid-row:1;
+  min-width:0;
+  justify-content:flex-start;
+}
+.ann-hero-with-art .ann-hero-copy{
+  grid-column:2;grid-row:1;
+  min-width:0;max-width:670px;
+  align-items:flex-start;text-align:left;
+  padding:22px 0 35px;
+}
+.ann-hero-with-art .ann-hero-copy .ann-flourish{margin-left:0}
+.ann-hero-with-art .ann-hero-art-frame{
+  min-width:0;
+  justify-content:flex-start;
+}
+.ann-hero-with-art .ann-hero-art-frame img{
+  object-fit:contain;
+  object-position:left center;
+  max-width:100%;
+  max-height:100%;
+}
+.ann-hero-with-art .ann-roman-lockup{
+  left:35%;
+  opacity:.23;
+  pointer-events:none;
+}
+.ann-hero-with-art .ann-date-roman{position:relative;z-index:2}
+.ann-hero-copy>*:not(.ann-roman-lockup){position:relative;z-index:3}
+.ann-hero-venue{max-width:100%;overflow-wrap:anywhere}
+.ann-page h1{max-width:100%;text-wrap:balance;overflow-wrap:normal}
+.ann-page h2,.ann-page h3{overflow-wrap:break-word;text-wrap:balance}
+.ann-event-cell,.ann-guidelines>div,.ann-payment,.ann-bank-card,.ann-form-shell,
+.ann-native-form,.ann-native-conditional,.ann-native-form input,
+.ann-native-form textarea,.ann-native-form select{min-width:0}
+.ann-bank-card dd>span:first-child{overflow-wrap:anywhere;word-break:break-word;min-width:0}
+.ann-event-actions a{text-align:center}
+.ann-native-shell{
+  max-width:700px;
+  border-color:rgba(221,151,88,.54);
+  background:
+    radial-gradient(ellipse at 50% 0,rgba(117,33,25,.18),transparent 68%),
+    #19120f;
+}
+.ann-native-form>h3{font-family:"Cinzel",Georgia,serif;font-size:clamp(25px,3vw,36px);line-height:1.25}
+.ann-native-overline{color:#e0ac79}
+.ann-native-submit{background:linear-gradient(110deg,#ca9564,#f1c188);color:#24140d}
+.ann-native-fee{border-color:rgba(224,155,91,.4);background:rgba(113,37,29,.13)}
+.ann-native-form input,.ann-native-form select,.ann-native-form textarea{max-width:100%}
+.ann-bank-card dd{flex-wrap:wrap}
+.ann-footer{padding-bottom:95px}
+
+@media(max-width:1100px) and (min-width:781px){
+  .ann-hero{padding-left:clamp(20px,3vw,38px);padding-right:clamp(20px,3vw,38px)}
+  .ann-hero-with-art .ann-hero-inner{gap:clamp(12px,2vw,30px)}
+  .ann-hero-with-art .ann-hero-copy{padding:12px 0}
+  .ann-page h1{font-size:clamp(42px,5.2vw,68px)}
+  .ann-hero-with-art .ann-hero-art-frame{height:min(610px,74svh)}
+  .ann-hero-with-art .ann-hero-art{min-height:470px}
+}
+@media(max-width:780px){
+  .ann-page-outline{inset:7px}
+  .ann-hero{min-height:0;padding:30px 17px 25px}
+  .ann-hero-sun,.ann-hero-with-art .ann-hero-sun{left:35%;top:58%;width:80vw;height:80vw}
+  .ann-hero-with-art .ann-hero-inner{
+    display:flex;flex-direction:column;align-items:stretch;
+    gap:clamp(14px,3vw,25px);min-height:0;
+    width:100%;
+  }
+  .ann-hero-with-art .ann-hero-copy{
+    width:100%;max-width:620px;margin:0 auto;
+    align-items:center;text-align:center;padding:0;
+  }
+  .ann-hero-with-art .ann-roman-lockup{
+    opacity:.09;left:50%;top:65px;
+    font-size:clamp(190px,44vw,265px);
+  }
+  .ann-hero-with-art .ann-date-roman{margin:12px 0 7px}
+  .ann-official-emblem{width:clamp(105px,22vw,132px)}
+  .ann-page h1{
+    font-size:clamp(31px,7.9vw,61px);
+    letter-spacing:-.045em;
+    line-height:1.15;
+    max-width:100%;
+  }
+  .ann-loge-name{font-size:clamp(18px,4.8vw,26px);margin:11px 0}
+  .ann-motto{font-size:clamp(20px,4.8vw,27px);max-width:100%;margin:12px 0}
+  .ann-hero-venue{font-size:11px;margin:14px auto 0;line-height:1.6}
+  .ann-hero-art{
+    position:relative;z-index:2;
+    inset:auto;left:auto;right:auto;bottom:auto;
+    width:100%;min-height:0;max-height:none;
+    height:clamp(235px,74vw,420px);
+    margin:0 auto;
+    align-self:stretch;
+    justify-content:flex-start;
+    pointer-events:none;
+  }
+  .ann-hero-art:before{inset:7% 5% 0 0}
+  .ann-hero-art-frame{
+    position:relative;inset:auto;
+    width:100%;height:100%;
+    overflow:visible;
+    display:flex;
+    justify-content:flex-start;
+    align-items:flex-end;
+  }
+  .ann-hero-art-frame img{
+    position:relative;width:auto;max-width:100%;height:100%;max-height:100%;
+    object-fit:contain;object-position:left bottom;
+    filter:drop-shadow(-10px 12px 25px rgba(0,0,0,.48));
+  }
+  .ann-hero-bottom{
+    position:relative;left:auto;right:auto;bottom:auto;
+    font-size:9px;line-height:1.5;letter-spacing:.12em;
+    margin:5px auto 0;padding-top:12px;
+    max-width:100%;overflow-wrap:anywhere;
+  }
+  .ann-body{padding:0 clamp(17px,4vw,29px)}
+  .ann-legacy{grid-template-columns:1fr;gap:10px;padding:61px 0}
+  .ann-legacy-symbol{display:none}
+  .ann-legacy-text{text-align:center}
+  .ann-legacy-text h2,.ann-section-heading h2{font-size:clamp(26px,6.1vw,38px)}
+  .ann-legacy-text>p:last-child{font-size:clamp(19px,4.6vw,25px)}
+  .ann-event{padding:65px 0}
+  .ann-event-grid{grid-template-columns:1fr}
+  .ann-event-cell{
+    padding:21px clamp(17px,4vw,26px);
+    border-right:0;border-bottom:1px solid var(--ann-rule);
+  }
+  .ann-event-cell:last-child{border-bottom:0}
+  .ann-event-actions{display:flex;gap:10px;flex-wrap:wrap}
+  .ann-event-actions a{min-width:0;flex:1 1 170px;overflow-wrap:anywhere}
+  .ann-guidelines{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ann-guidelines>div{padding:19px}
+  .ann-payment{grid-template-columns:1fr;padding:65px 0;gap:24px}
+  .ann-bank-card{padding:24px 21px}
+  .ann-registration{padding:63px 0}
+  .ann-native-shell{padding:24px 20px}
+  .ann-footer{padding:22px 0 74px}
+  .ann-mobile-cta{display:none!important}
+}
+@media(max-width:540px){
+  .ann-hero{padding:22px 14px 23px}
+  .ann-eyebrow{font-size:9px;letter-spacing:.125em}
+  .ann-hero-with-art .ann-roman-lockup{opacity:.075;top:63px}
+  .ann-hero-venue{max-width:280px}
+  .ann-hero-art{height:clamp(225px,83vw,335px)}
+  .ann-body{padding:0 17px}
+  .ann-guidelines{grid-template-columns:1fr}
+  .ann-guidelines>div{padding:23px 20px}
+  .ann-event-actions{flex-direction:column;align-items:stretch}
+  .ann-event-actions a{flex:unset;width:100%;min-height:44px}
+  .ann-bank-card dd{gap:7px}
+  .ann-bank-card dd>span:first-child{max-width:100%;font-size:clamp(12px,3.2vw,15px)}
+  .ann-copy-control{max-width:100%}
+  .ann-native-shell{padding:19px 14px}
+  .ann-native-form>h3{font-size:clamp(24px,6.5vw,31px)}
+  .ann-native-form label,.ann-native-conditional label{overflow-wrap:break-word}
+  .ann-native-form input:not([type="hidden"]),.ann-native-form select,.ann-native-form textarea{font-size:16px}
+  .ann-footer>p{font-size:clamp(20px,5.4vw,26px)}
+}
+@media(max-width:360px){
+  .ann-page h1{font-size:clamp(29px,8.5vw,32px)}
+  .ann-loge-name{font-size:18px}
+  .ann-motto{font-size:20px}
+  .ann-hero-bottom{font-size:8px;letter-spacing:.055em}
+  .ann-native-shell{padding:17px 12px}
+  .ann-bank-card{padding:20px 15px}
+  .ann-form-shell,.ann-bank-card{width:100%}
+}
