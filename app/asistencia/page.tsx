@@ -13,7 +13,7 @@ const GOOGLE_FORM =
 const GOOGLE_FORM_DIRECT =
   "https://docs.google.com/forms/d/e/1FAIpQLSd-flVDYA8kU5EBNBl0DbD1aDm19ZkTDVcsMt5JQa8TdXj8Eg/viewform";
 const VENUE_MAP =
-  "https://www.google.com/maps/search/?api=1&query=Mina+138%2C+Colonia+Guerrero%2C+Cuauht%C3%A9moc%2C+Ciudad+de+M%C3%A9xico";
+  "https://www.google.com/maps/search/?api=1&query=19.439744%2C-99.147970";
 
 function WeddingFlourish() {
   return (
