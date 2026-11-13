@@ -356,7 +356,13 @@
 .ann-native-success h3 {font:500 40px/1.1 "Cormorant Garamond",Georgia,serif;color:#f4dfb4;margin:0 0 15px}
 .ann-native-success p {color:#e0d1bb;font-size:14px;line-height:1.7}
 .ann-native-folio {font-size:12px!important;overflow-wrap:anywhere;border:1px solid #866c48;padding:12px;color:#ead4a7!important}
-.ann-native-transport {display:none!important;width:0!important;height:0!important;position:absolute!important;left:-9999px!important;border:0!important}
+/* Keep the transport frame technically rendered so mobile browsers perform the POST. */
+iframe.ann-native-transport {
+  position:absolute!important;left:-9999px!important;top:-9999px!important;
+  width:1px!important;height:1px!important;border:0!important;
+  opacity:0!important;pointer-events:none!important;
+}
+form.ann-native-transport {display:none!important}
 @media(max-width:480px){
   .ann-native-shell {padding:20px 16px}
   .ann-native-form input:not([type="hidden"]),.ann-native-form select,.ann-native-form textarea {font-size:16px}
