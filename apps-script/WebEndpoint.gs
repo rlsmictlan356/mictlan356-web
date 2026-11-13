@@ -74,6 +74,7 @@ function registrationStatusResponse_(params) {
     id: id,
     privateSaved: false,
     organizersSaved: false,
+    receiptSaved: false,
     error: false
   };
   try {
@@ -83,6 +84,13 @@ function registrationStatusResponse_(params) {
     if (!privateSheet || !organizersSheet) throw new Error("Hojas no disponibles.");
     result.privateSaved = Boolean(privateSheet.getRange("A2:A").createTextFinder(id).matchEntireCell(true).findNext());
     result.organizersSaved = Boolean(organizersSheet.getRange("A2:A").createTextFinder(id).matchEntireCell(true).findNext());
+    var files = getReceiptsFolder_().getFiles();
+    while (files.hasNext()) {
+      if (files.next().getName().indexOf(id + "_") === 0) {
+        result.receiptSaved = true;
+        break;
+      }
+    }
   } catch (err) {
     result.error = true;
     console.error("registrationStatusResponse_ failed: " + String(err));
