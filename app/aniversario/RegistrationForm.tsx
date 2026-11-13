@@ -1,77 +1,51 @@
-"use client";
-
-import { useState } from "react";
-
+/**
+ * Acceso directo al formulario publicado en Google Apps Script.
+ *
+ * Apps Script puede fallar al mostrarse dentro de un iframe externo
+ * (Firebase Hosting), presentando una pantalla de error de Google Drive.
+ * Abrir el despliegue /exec directamente evita el iframe intermedio.
+ * No cambiar la URL: el backend continúa enviando a Sheets y Drive.
+ */
 export default function RegistrationForm({ iframeUrl }: { iframeUrl: string }) {
-  const [attending, setAttending] = useState("si");
-  const [guests, setGuests] = useState(0);
-  const [name, setName] = useState("");
+  const validUrl = /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec(?:\?.*)?$/.test(iframeUrl);
 
-  // The real Apps Script form is embedded only when its deployment URL is configured.
-  if (/^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec(?:\?.*)?$/.test(iframeUrl)) {
+  if (!validUrl) {
     return (
-      <div className="ann-form-shell">
-        <iframe
-          title="Formulario de registro del V Aniversario y carga de comprobante"
-          src={iframeUrl}
-          loading="lazy"
-          referrerPolicy="strict-origin-when-cross-origin"
-        />
-        <p className="ann-form-calc">
-          ¿No aparece el formulario?{" "}
-          <a href={iframeUrl} target="_blank" rel="noopener noreferrer">
-            Abrir registro en una pestaña nueva
-          </a>
-        </p>
+      <div className="ann-form-shell ann-form-gateway" role="status">
+        <p className="ann-gateway-overline">Registro oficial</p>
+        <h3>Registro temporalmente no disponible</h3>
+        <p>El enlace de inscripción aún no está configurado. Contacta al responsable del evento.</p>
       </div>
     );
   }
 
   return (
-    <div className="ann-form-shell">
-      <form className="ann-form-preview" onSubmit={(event) => event.preventDefault()}>
-        <p className="ann-preview-note">
-          <strong>Vista previa.</strong> El registro y la carga de archivos se
-          activarán al desplegar Google Apps Script. Este formulario no envía información.
-        </p>
-        <label>
-          Nombre completo del hermano
-          <input type="text" placeholder="Nombre y apellidos" value={name} onChange={(e) => setName(e.target.value)} />
-        </label>
-        <label>
-          ¿Asistirás al aniversario?
-          <select value={attending} onChange={(e) => { setAttending(e.target.value); setGuests(0); }}>
-            <option value="si">Sí asistiré</option>
-            <option value="no">No asistiré</option>
-          </select>
-        </label>
-        {attending === "si" && (
-          <>
-            <label>
-              Número de invitados (sin incluirte)
-              <input type="number" min={0} max={30} value={guests} onChange={(e) => setGuests(Math.max(0, Number(e.target.value) || 0))} />
-            </label>
-            <p className="ann-form-calc">Total de asistentes: {1 + guests}</p>
-            <label>
-              Corte de carne que llevarás
-              <input type="text" placeholder="Ej. 2 kg de arrachera" />
-            </label>
-            <label>
-              Utensilios que aportarás (opcional)
-              <textarea placeholder="Ej. platos y servilletas" />
-            </label>
-          </>
-        )}
-        <div className="ann-preview-note">
-          Cuota obligatoria: <strong>$300 MXN por hermano</strong>, asista o no.
-          Cada asistente lleva sus propias bebidas.
-        </div>
-        <label>
-          Comprobante de pago (JPG, PNG o PDF, máximo 4 MB)
-          <input type="file" accept="image/jpeg,image/png,application/pdf" />
-        </label>
-        <button type="submit" disabled>Confirmar y enviar registro</button>
-      </form>
+    <div className="ann-form-shell ann-form-gateway">
+      <p className="ann-gateway-overline">Registro oficial · V Aniversario</p>
+      <h3>Confirma tu asistencia</h3>
+      <p className="ann-gateway-intro">
+        Abre el formulario de registro de Mictlán en una pestaña nueva.
+        Podrás indicar tu asistencia, número de invitados y aportaciones,
+        además de adjuntar el comprobante de pago.
+      </p>
+      <a className="ann-gateway-link" href={iframeUrl} target="_blank" rel="noopener noreferrer">
+        Abrir formulario de registro
+        <span aria-hidden="true">↗</span>
+      </a>
+      <p className="ann-gateway-hint">
+        Se abrirá directamente en Google Apps Script. Al terminar, vuelve a esta
+        página para consultar los datos del aniversario.
+      </p>
+      <div className="ann-gateway-notice">
+        <strong>Importante:</strong> el pago de $300 MXN y el comprobante son
+        obligatorios tanto si asistirás como si no. El Ecónomo validará los depósitos.
+      </div>
+      <p className="ann-gateway-fallback">
+        Si el botón no responde,{" "}
+        <a href={iframeUrl} target="_blank" rel="noopener noreferrer">
+          utiliza este enlace directo al formulario
+        </a>.
+      </p>
     </div>
   );
 }
