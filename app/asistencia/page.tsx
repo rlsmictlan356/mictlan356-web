@@ -2,93 +2,145 @@ import type { Metadata } from "next";
 import "./asistencia.css";
 
 export const metadata: Metadata = {
-  title: "Confirmación de asistencia | Mictlán No. 356",
-  description: "Confirma tu asistencia y registra tu aportación para la convivencia.",
-  robots: { index: false, follow: false }
+  title: "Reconocimiento Conyugal Masónico | Confirmación de asistencia",
+  description:
+    "Confirmación de asistencia al Reconocimiento Conyugal Masónico de Mario Juárez Alanís y Wendy Rolon Espinoza. 14 de noviembre de 2026 a las 14:00 h.",
+  robots: { index: false, follow: false },
 };
 
 const GOOGLE_FORM =
   "https://docs.google.com/forms/d/e/1FAIpQLSd-flVDYA8kU5EBNBl0DbD1aDm19ZkTDVcsMt5JQa8TdXj8Eg/viewform?embedded=true";
+const GOOGLE_FORM_DIRECT =
+  "https://docs.google.com/forms/d/e/1FAIpQLSd-flVDYA8kU5EBNBl0DbD1aDm19ZkTDVcsMt5JQa8TdXj8Eg/viewform";
+const VENUE_MAP =
+  "https://www.google.com/maps/search/?api=1&query=19.439744%2C-99.147970";
+
+function WeddingFlourish() {
+  return (
+    <div className="wc-flourish" aria-hidden="true">
+      <span />
+      <svg width="37" height="20" viewBox="0 0 37 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18.5 1L31 10L18.5 19L6 10L18.5 1Z" stroke="currentColor" strokeWidth=".8" />
+        <path d="M18.5 5L24 10L18.5 15L13 10L18.5 5Z" stroke="currentColor" strokeWidth=".8" />
+        <circle cx="18.5" cy="10" r="1.8" fill="currentColor" />
+      </svg>
+      <span />
+    </div>
+  );
+}
 
 export default function AsistenciaPage() {
   return (
-    <main className="asistencia-page">
-      <div className="asistencia-halo" aria-hidden="true" />
-      <div className="asistencia-border" aria-hidden="true" />
+    <main className="wc-site">
+      <div className="wc-outline" aria-hidden="true" />
+      <section className="wc-paper" aria-labelledby="wc-title">
+        <div className="wc-arch" aria-hidden="true" />
+        <img
+          src="/images/botanical-imperial.svg"
+          className="wc-flower wc-flower-left"
+          alt=""
+          aria-hidden="true"
+        />
+        <img
+          src="/images/botanical-imperial.svg"
+          className="wc-flower wc-flower-right"
+          alt=""
+          aria-hidden="true"
+        />
 
-      <header className="asistencia-header">
-        <a className="asistencia-home-link" href="/" aria-label="Volver al sitio de Mictlán">
-          <span className="asistencia-arrow" aria-hidden="true">←</span>
-          Mictlán No. 356
-        </a>
-        <span className="asistencia-header-right">R∴ L∴ S∴</span>
-      </header>
+        <header className="wc-invite">
+          <div className="wc-emblems">
+            <div className="wc-emblem wc-emblem-seal">
+              <img
+                src="/images/mictlan-356-emblema.webp"
+                width={1254}
+                height={1254}
+                alt="Emblema original de la R∴L∴S∴ Mictlán No. 356"
+              />
+              <span>Mictlán No. 356</span>
+            </div>
+            <div className="wc-emblem wc-compasses">
+              <img
+                src="/images/escuadra-compas-alta-calidad.webp"
+                width={640}
+                height={640}
+                alt="Escuadra y compás dorados, con ornamentación egipcia"
+              />
+            </div>
+            <div className="wc-emblem wc-emblem-seal">
+              <img
+                src="/images/duat-no7-alta-calidad.webp"
+                width={512}
+                height={512}
+                alt="Emblema de la R∴L∴C∴ Duat No. 7"
+              />
+              <span>Duat No. 7</span>
+            </div>
+          </div>
 
-      <section className="asistencia-intro" aria-labelledby="asistencia-titulo">
-        <div className="asistencia-seal">
-          <img
-            src="/images/mictlan-356-emblema.webp"
-            alt="Emblema de la R∴L∴S∴ Mictlán No. 356"
-            width={1254}
-            height={1254}
-          />
+          <p className="wc-eyebrow">C∴ Rec∴ Cony∴</p>
+          <h1 id="wc-title">
+            Reconocimiento<br />
+            <em>Conyugal Masónico</em>
+          </h1>
+          <p className="wc-motto">
+            Eres parte de nuestra familia y compartimos una historia
+          </p>
+          <WeddingFlourish />
+          <p className="wc-honorees">
+            <span>V∴H∴ Mario Juárez Alanís</span>
+            <b aria-label="y">&amp;</b>
+            <span>V∴H∴ Wendy Rolon Espinoza</span>
+          </p>
+        </header>
+
+        <div className="wc-logistics">
+          <p className="wc-date">
+            <strong>Sábado 14 de noviembre de 2026</strong>
+            <span>14:00 horas</span>
+          </p>
+          <p className="wc-location">
+            <strong>Templo de M∴ R∴ L∴ F∴ Alma de Anáhuac</strong>
+            <span>Calle Mina No. 138, Col. Guerrero, Alcaldía Cuauhtémoc, CDMX</span>
+          </p>
+          <a
+            className="wc-map"
+            href={VENUE_MAP}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
+              <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z" />
+              <circle cx="12" cy="10" r="2.8" />
+            </svg>
+            Ver ubicación en Google Maps
+          </a>
         </div>
 
-        <p className="asistencia-eyebrow">Respetable Logia Simbólica · No. 356</p>
-        <div className="asistencia-ornament" aria-hidden="true">
-          <span />
-          <span className="asistencia-diamond">◆</span>
-          <span />
-        </div>
+        <section className="wc-registration" aria-labelledby="wc-form-title">
+          <h2 id="wc-form-title">Confirma tu asistencia</h2>
+          <p className="wc-help">Completa el formulario aquí mismo.</p>
+          <aside className="wc-note">
+            <strong>Importante:</strong> cada asistente deberá llevar sus propias bebidas para consumo personal.
+          </aside>
+          <div className="wc-form-container">
+            <iframe
+              title="Formulario original de confirmación de asistencia y aportaciones"
+              src={GOOGLE_FORM}
+              loading="eager"
+              referrerPolicy="strict-origin-when-cross-origin"
+            />
+          </div>
+          <a className="wc-direct" href={GOOGLE_FORM_DIRECT} target="_blank" rel="noopener noreferrer">
+            ¿No aparece el formulario? Ábrelo aquí.
+          </a>
+        </section>
 
-        <h1 id="asistencia-titulo">Confirmación<br /><em>de asistencia</em></h1>
-
-        <p className="asistencia-lead">
-          Nos reunimos alrededor de una misma mesa.
-          Agradecemos que confirmes tu participación y nos indiques
-          qué platillo o aportación deseas compartir.
-        </p>
-
-        <aside className="asistencia-notice" aria-label="Información importante">
-          <span className="asistencia-notice-label">Consideración para los asistentes</span>
-          <p>Cada asistente deberá llevar sus propias bebidas para consumo personal.</p>
-        </aside>
+        <footer className="wc-footer">
+          <span aria-hidden="true">✧</span>
+          <p>Mictlán No. 356 · Duat No. 7</p>
+        </footer>
       </section>
-
-      <section className="asistencia-form-section" aria-labelledby="asistencia-form-titulo">
-        <div className="asistencia-form-heading">
-          <span className="asistencia-form-rule" aria-hidden="true" />
-          <h2 id="asistencia-form-titulo">Registro de invitados</h2>
-          <span className="asistencia-form-rule" aria-hidden="true" />
-        </div>
-        <p className="asistencia-form-helper">
-          Completa el formulario a continuación. Si no aparece en tu dispositivo,
-          puedes abrirlo directamente en Google Forms.
-        </p>
-        <div className="asistencia-form-shell">
-          <iframe
-            title="Formulario de confirmación de asistencia"
-            src={GOOGLE_FORM}
-            loading="eager"
-            referrerPolicy="strict-origin-when-cross-origin"
-          />
-        </div>
-        <a
-          className="asistencia-external-link"
-          href={GOOGLE_FORM}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Abrir el formulario en otra pestaña
-          <span aria-hidden="true">↗</span>
-        </a>
-      </section>
-
-      <footer className="asistencia-footer">
-        <span className="asistencia-footer-mark" aria-hidden="true">✦</span>
-        <p>R∴L∴S∴ Mictlán No. 356</p>
-        <small>Muy Respetable Gran Logia Valle de México</small>
-      </footer>
     </main>
   );
 }

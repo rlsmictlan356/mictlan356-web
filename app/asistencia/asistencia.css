@@ -1,284 +1,235 @@
-/* Asistencia · Mictlán 356 — isolated from the home page */
-.asistencia-page {
-  --ink: #090909;
-  --gold: #bd9854;
-  --gold-light: #ead8ac;
-  --parchment: #f1e9dc;
-  --faded: #b7ada0;
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap");
+
+.wc-site {
+  --wc-gold: #b29466;
+  --wc-brown: #655039;
+  --wc-ivory: #fbf9f3;
+  --wc-ink: #443a31;
+  --wc-rule: #d6c4a6;
   position: relative;
   isolation: isolate;
   min-height: 100vh;
   overflow: hidden;
-  padding: 0 clamp(18px, 4vw, 60px);
-  color: var(--parchment);
-  background:
-    radial-gradient(circle at 50% 19%, rgba(107, 22, 28, .26), transparent 39%),
-    radial-gradient(ellipse at 50% 76%, rgba(123, 88, 40, .075), transparent 55%),
-    var(--ink);
-  font-family: Georgia, "Times New Roman", serif;
-}
-.asistencia-page::before {
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  content: "";
-  pointer-events: none;
-  opacity: .11;
-  background: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,.018) 4px 5px);
-}
-.asistencia-halo {
-  position: absolute;
-  z-index: -1;
-  left: 50%;
-  top: 80px;
-  width: min(76vw, 740px);
-  aspect-ratio: 1;
-  border: 1px solid rgba(202, 157, 86, .11);
-  border-radius: 50%;
-  transform: translateX(-50%);
-  pointer-events: none;
-}
-.asistencia-halo::before,
-.asistencia-halo::after {
-  content: "";
-  position: absolute;
-  border-radius: 50%;
-  inset: 27px;
-  border: 1px solid rgba(202, 157, 86, .065);
-}
-.asistencia-halo::after {
-  inset: 54px;
-}
-.asistencia-border {
-  position: absolute;
-  inset: 18px;
-  border: 1px solid rgba(188, 151, 79, .16);
-  pointer-events: none;
-}
-.asistencia-header {
-  max-width: 1150px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 34px 0 16px;
-  gap: 12px;
-}
-.asistencia-home-link,
-.asistencia-header-right {
-  font: 600 .69rem/1.3 Arial, Helvetica, sans-serif;
-  text-transform: uppercase;
-  letter-spacing: .17em;
-  color: #bea875;
-  text-decoration: none;
-}
-.asistencia-home-link:hover,
-.asistencia-home-link:focus-visible {
-  color: #fff0ce;
-}
-.asistencia-arrow {
-  font-size: 1rem;
-  margin-right: 8px;
-}
-.asistencia-intro {
-  width: min(100%, 760px);
-  margin: 20px auto 0;
+  background: #f8f5ee;
+  padding: 12px 10px 18px;
+  color: var(--wc-ink);
+  color-scheme: light;
+  font-family: "Cormorant Garamond", Georgia, serif;
   text-align: center;
 }
-.asistencia-seal {
+.wc-site * { box-sizing: border-box; }
+.wc-outline { position: absolute; inset: 6px; border: 1px solid #d9c6a5; pointer-events: none; }
+.wc-paper {
   position: relative;
-  width: clamp(128px, 19vw, 198px);
-  margin: 0 auto 10px;
-}
-.asistencia-seal img {
-  display: block;
-  width: 100%;
-  height: auto;
-  filter: drop-shadow(0 5px 13px rgba(0,0,0,.65)) drop-shadow(0 0 12px rgba(203,162,89,.14));
-}
-.asistencia-eyebrow {
-  margin: 10px 0 0;
-  color: var(--gold);
-  font: 500 .69rem/1.5 Arial, Helvetica, sans-serif;
-  text-transform: uppercase;
-  letter-spacing: .24em;
-}
-.asistencia-ornament {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  margin: 16px auto 20px;
-  color: var(--gold);
-}
-.asistencia-ornament > span:not(.asistencia-diamond) {
-  width: 72px;
-  height: 1px;
-  background: linear-gradient(to right, transparent, #96703b);
-}
-.asistencia-ornament > span:last-child {
-  transform: rotate(180deg);
-}
-.asistencia-diamond {
-  font-size: .58rem;
-}
-.asistencia-page h1 {
-  margin: 0 auto 22px;
-  color: #f2e6d4;
-  font: 400 clamp(2.75rem, 6.6vw, 5.2rem)/1.05 Georgia, "Times New Roman", serif;
-  letter-spacing: -.035em;
-}
-.asistencia-page h1 em {
-  color: #d7b77c;
-  font-weight: 400;
-}
-.asistencia-lead {
-  max-width: 530px;
+  max-width: 860px;
   margin: 0 auto;
-  font-size: clamp(1.05rem, 2.1vw, 1.23rem);
-  line-height: 1.76;
-  color: #c8bdb0;
+  padding: 8px 8px 32px;
+  background: radial-gradient(ellipse at 50% 12%, #fffefa, transparent 70%);
 }
-.asistencia-notice {
-  max-width: 570px;
-  margin: 31px auto 0;
-  padding: 20px 26px;
-  border: 1px solid rgba(194, 158, 91, .37);
-  background: linear-gradient(135deg, rgba(102, 75, 39, .17), rgba(83, 20, 25, .12));
+.wc-arch {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(100%, 620px);
+  height: 320px;
+  border: 1px solid rgba(180,153,116,.26);
+  border-bottom: none;
+  border-radius: 360px 360px 0 0;
+  box-shadow: inset 0 0 0 11px rgba(255,255,255,.33), inset 0 0 0 12px rgba(196,169,131,.17);
+  pointer-events: none;
 }
-.asistencia-notice-label {
-  display: block;
-  font: 700 .67rem/1.45 Arial, Helvetica, sans-serif;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  color: #d4b27d;
+.wc-flower {
+  position: absolute;
+  width: 130px;
+  height: auto;
+  top: 195px;
+  opacity: .27;
+  pointer-events: none;
 }
-.asistencia-notice p {
-  max-width: 440px;
-  margin: 8px auto 0;
-  font-size: 1.05rem;
-  line-height: 1.55;
-  color: #e7dcc9;
+.wc-flower-left { left: -84px; }
+.wc-flower-right { right: -84px; transform: scaleX(-1); }
+.wc-invite, .wc-logistics, .wc-registration, .wc-footer { position: relative; z-index: 1; }
+.wc-emblems {
+  display: grid;
+  grid-template-columns: 1fr 1.22fr 1fr;
+  align-items: start;
+  gap: 6px;
+  width: min(100%, 430px);
+  margin: 0 auto 5px;
 }
-.asistencia-form-section {
-  width: min(100%, 820px);
-  margin: 66px auto 0;
-  text-align: center;
-}
-.asistencia-form-heading {
+.wc-emblem {
+  min-width: 0;
   display: flex;
+  flex-direction: column;
+  gap: 6px;
+  justify-content: start;
   align-items: center;
-  gap: 16px;
 }
-.asistencia-form-rule {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(195,154,83,.45));
+.wc-emblem-seal img {
+  width: clamp(72px, 21vw, 104px);
+  height: clamp(72px, 21vw, 104px);
+  object-fit: contain;
+  border-radius: 50%;
+  border: 1px solid #d2b98e;
+  padding: 3px;
+  box-shadow: 0 0 0 4px rgba(219,194,156,.12);
+  background: rgba(255,255,255,.52);
 }
-.asistencia-form-rule:last-child {
-  transform: rotate(180deg);
+.wc-emblem-seal span {
+  font: 500 11px/1.4 Inter,Arial,sans-serif;
+  letter-spacing: .005em;
+  color: #7b6142;
+  white-space: nowrap;
 }
-.asistencia-page h2 {
-  margin: 0;
-  color: #e4c895;
-  font: 400 clamp(1.3rem, 3vw, 1.8rem)/1.35 Georgia, "Times New Roman", serif;
-}
-.asistencia-form-helper {
-  max-width: 520px;
-  margin: 14px auto 24px;
-  color: #ada397;
-  font: .92rem/1.6 Arial, Helvetica, sans-serif;
-}
-.asistencia-form-shell {
-  overflow: hidden;
-  border: 1px solid rgba(197, 159, 89, .35);
-  border-radius: 12px;
-  background: #f3f0ea;
-  box-shadow: 0 28px 80px rgba(0,0,0,.42);
-}
-.asistencia-form-shell iframe {
+.wc-compasses { align-self: start; margin-top: -2px; }
+.wc-compasses img {
   display: block;
-  width: 100%;
-  height: 1200px;
-  border: 0;
-  background: #f3f0ea;
+  width: clamp(100px, 29vw, 152px);
+  height: clamp(100px, 29vw, 152px);
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(116,79,33,.12));
 }
-.asistencia-external-link {
-  display: inline-flex;
-  justify-content: center;
+.wc-eyebrow {
+  color: #907047;
+  font: 600 11px/1.5 Inter,Arial,sans-serif;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin: 6px 0 8px;
+}
+.wc-site h1 {
+  color: #6b5335;
+  font: 500 clamp(39px, 10.1vw, 67px)/.94 "Cormorant Garamond",Georgia,serif;
+  letter-spacing: -.027em;
+  margin: 0;
+  text-wrap: balance;
+}
+.wc-site h1 em { color: #967243; font-style: normal; }
+.wc-motto {
+  max-width: 530px;
+  margin: 10px auto 0;
+  font: italic 400 clamp(18px, 3.3vw, 23px)/1.18 "Cormorant Garamond",Georgia,serif;
+  color: #71604d;
+  text-wrap: balance;
+}
+.wc-flourish {
+  display: flex;
   align-items: center;
   gap: 9px;
-  margin: 24px auto 0;
-  color: #dcc18e;
-  font: 600 .8rem/1.4 Arial, Helvetica, sans-serif;
-  letter-spacing: .025em;
-  text-underline-offset: 5px;
+  max-width: 210px;
+  margin: 8px auto 6px;
+  color: #b29466;
 }
-.asistencia-external-link:hover,
-.asistencia-external-link:focus-visible {
-  color: #fff0c9;
+.wc-flourish span { height: 1px; flex: 1; background: linear-gradient(90deg, transparent,#c7a978); }
+.wc-flourish span:last-child { transform: rotate(180deg); }
+.wc-honorees {
+  margin: 0 auto;
+  max-width: 640px;
+  color: #504135;
+  font: 500 clamp(21px, 5.7vw, 31px)/1.08 "Cormorant Garamond",Georgia,serif;
 }
-.asistencia-footer {
-  padding: 78px 0 48px;
-  text-align: center;
-  color: #a18c68;
+.wc-honorees span { display: block; }
+.wc-honorees b { display: block; color: #a88757; font: italic 400 21px/1.1 "Cormorant Garamond",Georgia,serif; margin: 2px 0; }
+.wc-logistics {
+  border-top: 1px solid rgba(170,131,76,.36);
+  border-bottom: 1px solid rgba(170,131,76,.3);
+  max-width: 650px;
+  margin: 18px auto 0;
+  padding: 13px 3px 14px;
 }
-.asistencia-footer-mark {
-  font-size: 1.1rem;
-  color: #ad8748;
+.wc-date, .wc-location { display: flex; flex-direction: column; margin: 0 auto; }
+.wc-date { color: #6d583e; font: 500 21px/1.2 "Cormorant Garamond",Georgia,serif; }
+.wc-date strong,.wc-location strong { font-weight: 600; }
+.wc-date span { color: #936a39; }
+.wc-location { margin-top: 8px; font: 500 18px/1.22 "Cormorant Garamond",Georgia,serif; color: #5d4f40; }
+.wc-location span { margin: 5px auto 0; max-width: 510px; font: 400 13px/1.43 Inter,Arial,sans-serif; }
+.wc-map {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px auto 0;
+  color: #744f22;
+  background: #fffaf1;
+  border: 1px solid #cdb186;
+  border-radius: 6px;
+  padding: 9px 12px;
+  min-height: 44px;
+  font: 600 13px/1.3 Inter,Arial,sans-serif;
+  text-decoration: none;
 }
-.asistencia-footer p {
-  margin: 12px 0 5px;
-  font: 600 .72rem/1.4 Arial, Helvetica, sans-serif;
-  text-transform: uppercase;
-  letter-spacing: .13em;
+.wc-map:hover,.wc-map:focus-visible { color: #4d3215; background: #f6ecd8; }
+.wc-map svg { flex: none; width: 19px; height: 19px; stroke: currentColor; stroke-width: 1.5; }
+.wc-registration { max-width: 710px; margin: 17px auto 0; }
+.wc-site h2 {
+  margin: 0;
+  color: #765b36;
+  font: 500 clamp(29px, 7vw, 42px)/1.12 "Cormorant Garamond",Georgia,serif;
 }
-.asistencia-footer small {
-  font-size: .78rem;
-  color: #746a5e;
+.wc-help {
+  margin: 6px auto 12px;
+  font: 400 15px/1.45 Inter,Arial,sans-serif;
+  color: #655848;
 }
-@media (max-width: 650px) {
-  .asistencia-page {
-    padding: 0 18px;
-  }
-  .asistencia-border {
-    inset: 8px;
-  }
-  .asistencia-header {
-    padding: 23px 5px 8px;
-  }
-  .asistencia-header-right {
-    font-size: .62rem;
-  }
-  .asistencia-intro {
-    margin-top: 28px;
-  }
-  .asistencia-page h1 {
-    font-size: clamp(2.9rem, 11vw, 4.3rem);
-  }
-  .asistencia-eyebrow {
-    font-size: .61rem;
-    letter-spacing: .17em;
-  }
-  .asistencia-lead {
-    font-size: 1rem;
-  }
-  .asistencia-notice {
-    padding: 19px 16px;
-  }
-  .asistencia-form-section {
-    margin-top: 55px;
-  }
-  .asistencia-form-heading {
-    gap: 8px;
-  }
-  .asistencia-page h2 {
-    font-size: 1.35rem;
-  }
-  .asistencia-form-shell iframe {
-    height: 1300px;
-  }
-  .asistencia-footer {
-    padding: 55px 0 35px;
-  }
+.wc-note {
+  margin: 0 auto 12px;
+  max-width: 625px;
+  padding: 11px 13px;
+  border: 1px solid #d8c19f;
+  border-radius: 7px;
+  background: #f1e7d6;
+  color: #5f4b36;
+  font: 400 14px/1.5 Inter,Arial,sans-serif;
+}
+.wc-note strong { font-weight: 600; }
+.wc-form-container {
+  overflow: hidden;
+  border: 1px solid #d5c3aa;
+  border-radius: 10px;
+  box-shadow: 0 10px 32px rgba(109,81,43,.06);
+  background: #fff;
+}
+.wc-form-container iframe {
+  display: block;
+  border: 0;
+  width: 100%;
+  height: 1320px;
+  background: #fff;
+}
+.wc-direct {
+  display: inline-block;
+  padding: 10px 5px;
+  margin-top: 3px;
+  color: #855e30;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font: 500 13px/1.45 Inter,Arial,sans-serif;
+}
+.wc-footer { padding-top: 21px; color: #997749; }
+.wc-footer span { font-size: 26px; }
+.wc-footer p { margin: 1px 0; font: 500 11px/1.4 Inter,Arial,sans-serif; }
+@media (min-width: 680px) {
+  .wc-site { padding: 16px 18px 25px; }
+  .wc-outline { inset: 11px; }
+  .wc-paper { padding: 17px 35px 33px; }
+  .wc-emblems { max-width: 500px; gap: 25px; margin-bottom: 14px; }
+  .wc-emblem-seal img { width: 116px; height: 116px; }
+  .wc-compasses img { width: 162px; height: 162px; }
+  .wc-emblem-seal span { font-size: 12px; }
+  .wc-eyebrow { margin-top: 5px; }
+  .wc-motto { margin-top: 13px; }
+  .wc-flower { width: 205px; top: 260px; opacity: .48; }
+  .wc-flower-left { left: -190px; }
+  .wc-flower-right { right: -190px; }
+  .wc-arch { height: 460px; width: 750px; top: -75px; }
+  .wc-logistics { margin-top: 23px; }
+  .wc-date { font-size: 23px; }
+  .wc-location { font-size: 21px; }
+  .wc-registration { margin-top: 24px; }
+  .wc-form-container iframe { height: 1120px; }
+}
+@media (max-width: 380px) {
+  .wc-emblem-seal img { width: 70px; height: 70px; }
+  .wc-emblem-seal span { font-size: 10px; }
+  .wc-compasses img { width: 95px; height: 95px; }
+  .wc-site h1 { font-size: clamp(37px,10vw,43px); }
 }
