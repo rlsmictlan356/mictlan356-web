@@ -71,9 +71,9 @@ export default function AniversarioPage() {
               <div className="ann-hero-art-frame">
                 <img
                   src={anniversaryArtworkSrc}
-                  alt="Ilustración conmemorativa del V Aniversario de Mictlán"
-                  width={2200}
-                  height={3000}
+                  alt="Xoloitzcuintle guardián de Mictlán, con ornamentación de obsidiana, oro y motivos mexicas"
+                  width={1122}
+                  height={1402}
                   fetchPriority="high"
                 />
               </div>
