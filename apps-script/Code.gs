@@ -14,7 +14,7 @@ const ORGANIZERS_SPREADSHEET_ID = "1RRg6sFUMruQCoNh3A1Mhj2-UWZjWJIRfwNprbrV4pfQ"
 const PRIVATE_SHEET_NAME = "Registros privados";
 const ORGANIZERS_SHEET_NAME = "Asistencia";
 const MAX_FILE_BYTES = 4 * 1024 * 1024;
-const FOLDER_PROPERTY = "MICTLAN_ANIVERSARIO_RECEIPTS_FOLDER_ID";
+const RECEIPTS_FOLDER_ID = "1YEZtW0_ohFHX8FqHFnPeC2mAJDsktF1v";
 const LOCK_WAIT_MS = 20000;
 
 /** Solo se ejecuta manualmente en el editor. Su nombre acabado en _ impide llamadas desde google.script.run. */
@@ -22,7 +22,7 @@ function setup_() {
   SpreadsheetApp.openById(PRIVATE_SPREADSHEET_ID).getSheetByName(PRIVATE_SHEET_NAME);
   SpreadsheetApp.openById(ORGANIZERS_SPREADSHEET_ID).getSheetByName(ORGANIZERS_SHEET_NAME);
   getReceiptsFolder_();
-  return "Preparación completada. Verifica que se haya creado la carpeta privada de comprobantes.";
+  return "Preparación completada. Acceso a Sheets y carpeta de comprobantes autorizado.";
 }
 
 function doGet() {
@@ -97,12 +97,7 @@ function submitRegistration(payload) {
 }
 
 function getReceiptsFolder_() {
-  const props = PropertiesService.getScriptProperties();
-  const saved = props.getProperty(FOLDER_PROPERTY);
-  if (saved) return DriveApp.getFolderById(saved);
-  const folder = DriveApp.createFolder("Mictlán 356 - V Aniversario 2026 - Comprobantes PRIVADOS");
-  props.setProperty(FOLDER_PROPERTY, folder.getId());
-  return folder;
+  return DriveApp.getFolderById(RECEIPTS_FOLDER_ID);
 }
 
 function clean_(value, limit) {
