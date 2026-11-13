@@ -1,51 +1,203 @@
-/**
- * Acceso directo al formulario publicado en Google Apps Script.
- *
- * Apps Script puede fallar al mostrarse dentro de un iframe externo
- * (Firebase Hosting), presentando una pantalla de error de Google Drive.
- * Abrir el despliegue /exec directamente evita el iframe intermedio.
- * No cambiar la URL: el backend continúa enviando a Sheets y Drive.
- */
-export default function RegistrationForm({ iframeUrl }: { iframeUrl: string }) {
-  const validUrl = /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec(?:\?.*)?$/.test(iframeUrl);
+"use client";
 
-  if (!validUrl) {
-    return (
-      <div className="ann-form-shell ann-form-gateway" role="status">
-        <p className="ann-gateway-overline">Registro oficial</p>
-        <h3>Registro temporalmente no disponible</h3>
-        <p>El enlace de inscripción aún no está configurado. Contacta al responsable del evento.</p>
-      </div>
+import { useEffect, useRef, useState, type FormEvent } from "react";
+
+const MAX_RECEIPT_BYTES = 4 * 1024 * 1024;
+const RESPONSE_KIND = "mictlan-anniversary-2026-result";
+const POST_FRAME = "mictlan-anniversary-post-frame";
+type State = "idle" | "sending" | "success" | "error";
+type Reply = { kind: string; ok: boolean; id: string; alreadyRegistered?: boolean; message?: string };
+
+function createId() {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") return crypto.randomUUID();
+  return "reg-" + Date.now() + "-" + Math.random().toString(36).slice(2, 14);
+}
+
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const url = String(reader.result ?? "");
+      const comma = url.indexOf(",");
+      if (comma < 0) reject(new Error("No se pudo leer el comprobante."));
+      else resolve(url.slice(comma + 1));
+    };
+    reader.onerror = () => reject(new Error("No se pudo leer el comprobante."));
+    reader.readAsDataURL(file);
+  });
+}
+
+export default function RegistrationForm({ iframeUrl }: { iframeUrl: string }) {
+  const configured = /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec(?:\?.*)?$/.test(iframeUrl);
+  const [name, setName] = useState("");
+  const [attendance, setAttendance] = useState<"si" | "no">("si");
+  const [guests, setGuests] = useState("0");
+  const [meat, setMeat] = useState("");
+  const [utensils, setUtensils] = useState("");
+  const [receipt, setReceipt] = useState<File | null>(null);
+  const [state, setState] = useState<State>("idle");
+  const [message, setMessage] = useState("");
+  const [folio, setFolio] = useState("");
+  const transportForm = useRef<HTMLFormElement>(null);
+  const transportValue = useRef<HTMLInputElement>(null);
+  const transportFrame = useRef<HTMLIFrameElement>(null);
+  const idRef = useRef("");
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    const onReply = (event: MessageEvent) => {
+      const data = event.data as Reply | null;
+      if (!data || typeof data !== "object" || data.kind !== RESPONSE_KIND ||
+        !idRef.current || data.id !== idRef.current || typeof data.ok !== "boolean") return;
+
+      // Google Apps Script serves HTML responses through googleusercontent.com.
+      const origin = event.origin.toLowerCase();
+      const trustedOrigin = origin === "https://script.google.com" ||
+        /^https:\/\/(?:[\w-]+\.)*googleusercontent\.com$/.test(origin);
+      const sandboxedFrame = origin === "null" && event.source === transportFrame.current?.contentWindow;
+      if (!trustedOrigin && !sandboxedFrame) return;
+
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = null;
+      if (data.ok) {
+        setFolio(data.id);
+        setMessage(data.alreadyRegistered
+          ? "Este folio ya se había recibido. No se creó un registro duplicado."
+          : "Tu registro se recibió correctamente y el Ecónomo revisará el comprobante.");
+        setState("success");
+      } else {
+        setMessage(data.message || "No fue posible registrar los datos. Intenta nuevamente.");
+        setState("error");
+      }
+    };
+    window.addEventListener("message", onReply);
+    return () => {
+      window.removeEventListener("message", onReply);
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
+
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (state === "sending" || state === "success") return;
+    setMessage("");
+    if (!configured) {
+      setState("error"); setMessage("El registro no está configurado."); return;
+    }
+    if (name.trim().length < 5) {
+      setState("error"); setMessage("Escribe tu nombre completo."); return;
+    }
+    const guestCount = attendance === "si" ? Number(guests) : 0;
+    if (attendance === "si" && (!Number.isInteger(guestCount) || guestCount < 0 || guestCount > 30)) {
+      setState("error"); setMessage("Indica entre 0 y 30 invitados."); return;
+    }
+    if (attendance === "si" && !meat.trim()) {
+      setState("error"); setMessage("Indica el corte de carne."); return;
+    }
+    if (!receipt || receipt.size < 1 || receipt.size > MAX_RECEIPT_BYTES) {
+      setState("error"); setMessage("Adjunta un comprobante de hasta 4 MB."); return;
+    }
+    const ext = receipt.name.toLowerCase().split(".").pop();
+    const mime = receipt.type || (
+      ext === "pdf" ? "application/pdf" :
+      ext === "png" ? "image/png" :
+      ext === "jpg" || ext === "jpeg" ? "image/jpeg" : ""
     );
+    if (!["image/jpeg", "image/png", "application/pdf"].includes(mime)) {
+      setState("error"); setMessage("Solo se permiten archivos PDF, JPG y PNG."); return;
+    }
+    setState("sending");
+    try {
+      // A stable ID prevents duplicates if the response gets lost and the user retries.
+      if (!idRef.current) idRef.current = createId();
+      const payload = JSON.stringify({
+        id: idRef.current,
+        name: name.trim(), attendance, guests: guestCount,
+        meat: attendance === "si" ? meat.trim() : "",
+        utensils: attendance === "si" ? utensils.trim() : "",
+        website: "",
+        receipt: { name: receipt.name, mime, base64: await fileToBase64(receipt) }
+      });
+      if (!transportForm.current || !transportValue.current) throw new Error("No está disponible el envío.");
+      transportValue.current.value = payload;
+      // Browser form POST: no CORS preflight. Its response stays in a hidden iframe.
+      transportForm.current.submit();
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => {
+        setState("error");
+        setMessage("No recibimos confirmación. Antes de reenviar, consulta con el Ecónomo si llegó el registro para evitar duplicados.");
+      }, 60000);
+    } catch (error) {
+      setState("error");
+      setMessage(error instanceof Error ? error.message : "No se pudo enviar el comprobante.");
+    }
   }
 
+  if (!configured) return (
+    <div className="ann-form-shell" role="status">
+      <p>El registro no está disponible. Contacta al responsable del evento.</p>
+    </div>
+  );
+
   return (
-    <div className="ann-form-shell ann-form-gateway">
-      <p className="ann-gateway-overline">Registro oficial · V Aniversario</p>
-      <h3>Confirma tu asistencia</h3>
-      <p className="ann-gateway-intro">
-        Abre el formulario de registro de Mictlán en una pestaña nueva.
-        Podrás indicar tu asistencia, número de invitados y aportaciones,
-        además de adjuntar el comprobante de pago.
-      </p>
-      <a className="ann-gateway-link" href={iframeUrl} target="_blank" rel="noopener noreferrer">
-        Abrir formulario de registro
-        <span aria-hidden="true">↗</span>
-      </a>
-      <p className="ann-gateway-hint">
-        Se abrirá directamente en Google Apps Script. Al terminar, vuelve a esta
-        página para consultar los datos del aniversario.
-      </p>
-      <div className="ann-gateway-notice">
-        <strong>Importante:</strong> el pago de $300 MXN y el comprobante son
-        obligatorios tanto si asistirás como si no. El Ecónomo validará los depósitos.
-      </div>
-      <p className="ann-gateway-fallback">
-        Si el botón no responde,{" "}
-        <a href={iframeUrl} target="_blank" rel="noopener noreferrer">
-          utiliza este enlace directo al formulario
-        </a>.
-      </p>
+    <div className="ann-form-shell ann-native-shell">
+      {state === "success" ? (
+        <div className="ann-native-success" role="status">
+          <div className="ann-native-success-mark" aria-hidden="true">✓</div>
+          <h3>Registro recibido</h3>
+          <p>{message}</p>
+          <p className="ann-native-folio">Folio: <strong>{folio}</strong></p>
+          <p>El pago queda «Pendiente» hasta que lo valide el Ecónomo.</p>
+        </div>
+      ) : (
+        <form className="ann-native-form" onSubmit={onSubmit}>
+          <p className="ann-native-overline">Registro oficial · V Aniversario</p>
+          <h3>Datos de participación</h3>
+
+          <label htmlFor="ann-name">Nombre completo del hermano <span>*</span></label>
+          <input id="ann-name" type="text" autoComplete="name" placeholder="Nombre y apellidos" minLength={5} maxLength={140} value={name} onChange={(e) => setName(e.target.value)} required disabled={state === "sending"}/>
+
+          <label htmlFor="ann-attendance">¿Asistirás al aniversario? <span>*</span></label>
+          <select id="ann-attendance" value={attendance} onChange={(e) => setAttendance(e.target.value as "si" | "no")} required disabled={state === "sending"}>
+            <option value="si">Sí asistiré</option>
+            <option value="no">No asistiré</option>
+          </select>
+
+          {attendance === "si" && (
+            <div className="ann-native-conditional">
+              <label htmlFor="ann-guests">Número de invitados (sin incluirte) <span>*</span></label>
+              <input id="ann-guests" type="number" min={0} max={30} step={1} value={guests} onChange={(e) => setGuests(e.target.value)} required disabled={state === "sending"}/>
+              <p className="ann-native-counter">Total de asistentes: <strong>{1 + (Number(guests) || 0)}</strong></p>
+
+              <label htmlFor="ann-meat">Corte de carne que llevarás <span>*</span></label>
+              <input id="ann-meat" type="text" placeholder="Ej. 2 kg de arrachera" maxLength={240} value={meat} onChange={(e) => setMeat(e.target.value)} required disabled={state === "sending"}/>
+
+              <label htmlFor="ann-utensils">Utensilios que aportarás <small>(opcional)</small></label>
+              <textarea id="ann-utensils" rows={3} maxLength={300} placeholder="Ej. platos y servilletas" value={utensils} onChange={(e) => setUtensils(e.target.value)} disabled={state === "sending"} />
+            </div>
+          )}
+
+          <div className="ann-native-fee">
+            <strong>Cuota obligatoria: $300 MXN por hermano</strong>
+            <p>El pago y el comprobante son obligatorios asistas o no. Los invitados no tienen costo adicional.</p>
+            <p>Las bebidas son por cuenta de cada persona.</p>
+          </div>
+
+          <label htmlFor="ann-receipt">Comprobante de pago <span>*</span></label>
+          <input id="ann-receipt" type="file" accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf" onChange={(e) => setReceipt(e.target.files?.[0] || null)} required disabled={state === "sending"} />
+          <p className="ann-native-hint">JPG, PNG o PDF · Máximo 4 MB. El archivo se guarda de forma privada.</p>
+
+          {state === "error" && <p className="ann-native-error" role="alert">{message}</p>}
+          <button className="ann-native-submit" type="submit" disabled={state === "sending"}>
+            {state === "sending" ? "Enviando registro…" : "Confirmar y enviar registro"}
+          </button>
+          <p className="ann-native-hint ann-native-note">No cierres esta página hasta ver tu folio de confirmación.</p>
+        </form>
+      )}
+      <iframe name={POST_FRAME} ref={transportFrame} className="ann-native-transport" title="Envío interno del registro" tabIndex={-1} aria-hidden="true"/>
+      <form ref={transportForm} action={iframeUrl} target={POST_FRAME} method="post" encType="application/x-www-form-urlencoded" className="ann-native-transport" aria-hidden="true">
+        <input ref={transportValue} type="hidden" name="payload" />
+      </form>
     </div>
   );
 }
