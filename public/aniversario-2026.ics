@@ -1,0 +1,14 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//RLS Mictlan No. 356//V Aniversario 2026//ES
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:v-aniversario-2026@mictlan356-web
+DTSTAMP:20261113T180000Z
+DTSTART:20261128T190000Z
+SUMMARY:V Aniversario de la R∴L∴S∴ Mictlán No. 356
+DESCRIPTION:Inicio: 13:00 h (CDMX). Rooftop del V∴H∴ Ragnar. Hora de término por confirmar. Cuota de 300 MXN por hermano (asista o no). Registro obligatorio y comprobante de pago.
+LOCATION:Patricio Sanz 236, Ciudad de México, México
+END:VEVENT
+END:VCALENDAR
