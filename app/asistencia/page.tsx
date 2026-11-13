@@ -61,17 +61,17 @@ export default function AsistenciaPage() {
             </div>
             <div className="wc-emblem wc-compasses">
               <img
-                src="/images/escuadra-compas-imperial.svg"
-                width={160}
-                height={160}
+                src="/images/escuadra-compas-alta-calidad.webp"
+                width={640}
+                height={640}
                 alt="Escuadra y compás dorados, con ornamentación egipcia"
               />
             </div>
             <div className="wc-emblem wc-emblem-seal">
               <img
-                src="/images/duat-no7-emblema.svg"
-                width={240}
-                height={240}
+                src="/images/duat-no7-alta-calidad.webp"
+                width={512}
+                height={512}
                 alt="Emblema de la R∴L∴C∴ Duat No. 7"
               />
               <span>Duat No. 7</span>
