@@ -1,0 +1,55 @@
+name: Firebase preview - Blanco Imperial
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+concurrency:
+  group: firebase-preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout preview branch
+        uses: actions/checkout@v4
+
+      - name: Configure Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Next.js static export
+        run: npm run build
+
+      - name: Verify expected routes
+        run: |
+          test -f out/index.html
+          test -f out/asistencia/index.html
+          test -f out/images/mictlan-356-emblema.webp
+          test -f out/images/duat-no7-emblema.svg
+
+      - name: Deploy to isolated Firebase preview channel
+        id: firebase_preview
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_RLS_MICTLAN356 }}"
+          projectId: rls-mictlan356
+          channelId: blanco-imperial
+          expires: 7d
+
+      - name: Publish preview link in job summary
+        run: |
+          echo "Preview URL: ${{ steps.firebase_preview.outputs.url }}" >> "${GITHUB_STEP_SUMMARY}"
